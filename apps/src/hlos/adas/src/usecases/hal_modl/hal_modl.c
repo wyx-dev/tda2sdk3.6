@@ -544,6 +544,7 @@ int hal_modl_wait_output_buffer(
             if (timeout_count >= 5000)
             {
                 Vps_printf("!!!!!!!!!!!Hal modl timeout!!!!!!: proc id:%d!\n", procID);
+                OSA_assert(0);
             }
         }
     }

@@ -65,14 +65,15 @@ extern "C" {
 #define WA_MAX_ALG_IN_BUFS                        (1)
 #define WA_MAX_ALG_OUT_BUFS                       (1)
 
-#define WA_ALGLINK_OUT_BUF_WIDTH                  (112)
-#define WA_ALGLINK_OUT_BUF_HEIGHT                 (112)
+#define WA_ALGLINK_OUT_BUF_WIDTH                  (128)
+#define WA_ALGLINK_OUT_BUF_HEIGHT                 (128)
 #define WA_ALGLINK_OUT_BUF_CHANNEL                (3)
-#define WA_ALGLINK_OUT_BUF_NUMBER                 (6)
+#define WA_ALGLINK_OUT_BUF_NUMBER                 (2)
+#define WA_ALGLINK_OUT_BUF_BATCH                  (6)
 #define WA_ALGLINK_OUT_BUF_SIZE                   (WA_ALGLINK_OUT_BUF_WIDTH * \
                                                    WA_ALGLINK_OUT_BUF_HEIGHT * \
                                                    WA_ALGLINK_OUT_BUF_CHANNEL * \
-                                                   WA_ALGLINK_OUT_BUF_NUMBER)
+                                                   WA_ALGLINK_OUT_BUF_NUMBER * WA_ALGLINK_OUT_BUF_BATCH)
 
 /**
  *******************************************************************************

@@ -447,7 +447,7 @@ Int32 AlgorithmLink_warpAffineProcess(void *pObj)
                              (IVISION_OutArgs *)&pChObj->algWaOutArgs
                              );
 
-                //Vps_printf("******************WA:DSP finish to proc!\n");
+                Vps_printf("******************WA:DSP finish to proc!\n");
 
                 UTILS_assert(IALG_EOK == status);
 
