@@ -1,0 +1,26 @@
+//full name is chains hal offline camera vpe resize save and display
+UseCase: chains_hal_offline_cam_vpe_sad
+
+// Capture and Dup_cap(one input)
+NullSource (A15) -> Dup_cap
+
+// Dup_cap(multi output) to VPE0 ... VPEn 
+Dup_cap -> Display
+Dup_cap -> Merge_vpe
+Dup_cap -> VPE_resize_0
+Dup_cap -> VPE_resize_1
+Dup_cap -> VPE_resize_2
+Dup_cap -> VPE_resize_3
+
+// VPE0 ... VPEn to Meger(one output)
+VPE_resize_0 -> Merge_vpe
+VPE_resize_1 -> Merge_vpe
+VPE_resize_2 -> Merge_vpe
+VPE_resize_3 -> Merge_vpe
+
+//Merge to Sync
+Merge_vpe -> Sync_vpe
+
+//Sync to Null(A15)
+Sync_vpe -> Null(A15)
+

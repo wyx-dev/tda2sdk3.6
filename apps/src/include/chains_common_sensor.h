@@ -106,6 +106,10 @@ extern "C" {
      /**< Capture source is OV 10635
       *   SUPPORTED on TDA2x EVM, TDA3x EVM
       */
+     CHAINS_CAPTURE_SRC_XC7027,
+     /**< Capture source is XC7027 
+      *   SUPPORTED on TDA2x EVM, TDA3x EVM
+      */
      CHAINS_CAPTURE_SRC_HDMI_720P,
      /**< Capture source is HDMI in 720P resolution
       *   SUPPORTED on TDA2x EVM
@@ -197,11 +201,12 @@ extern "C" {
      CHAINS_CAPTURE_SRC_OV490,
      /**< Capture source is OV490 */
 
+	 CHAINS_CAPTURE_SRC_OV490_OV10640,
+	/**< Capture sensor is OV10640, ISP is OV490 */
 
-     CHAINS_CAPTURE_SRC_UB960_MARS_AR0233,
-     /**< AR0233 sensor with UB953 MARS Module
-      *   SUPPORTED on TDA3x RVP and TDA2Px EVM
-      */
+     //CHAINS_CAPTURE_SRC_OV2718_XC7027_UB913,
+     /**< Capture sensor=OV2718 isp=xc7027 Serial=ub913*/
+
      CHAINS_CAPTURE_SRC_MAX
      /**< Max number of capture source's */
 

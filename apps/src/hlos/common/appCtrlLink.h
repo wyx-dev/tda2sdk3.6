@@ -471,8 +471,13 @@ typedef struct
  *
  *******************************************************************************
 */
-#define APP_CTRL_LINK_CMD_STOP_RADAR                        (0x1018)
-
+#define APP_CTRL_LINK_CMD_STOP_RADAR                     (0x1018)
+#define APP_CTRL_LINK_CMD_SYNC_EXTEND_IO                 (0x1019)
+#define APP_CTRL_LINK_CMD_IMU_GET_DATA                   (0x101a)
+#define APP_CTRL_LINK_CMD_IMU_SET_NUM                    (0x101b)
+#define APP_CTRL_LINK_CMD_CAM_SET_FRAMERATE              (0x101c)
+#define APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_START        (0x101d)
+#define APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_STOP         (0x101e)
 /*@}*/
 
 

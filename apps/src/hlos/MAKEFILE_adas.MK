@@ -15,11 +15,11 @@ ifeq ($(TARGET),depend)
 endif
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/common MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/common MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
-	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/vip_single_cam_sgx_display MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
-ifeq ($(UC_vip_single_cam_sgx_display_autosar_app),yes)
-	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/vip_single_cam_sgx_display_autosar_app MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
-	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/vip_single_cam_sgx_display_autosar_app/autosar_mcal_testApp MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/app_main MODNAME=app_main CORE=a15_0 $(TARGET)
+ifeq ($(TARGET),lib)
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/app_main MODNAME=app_main CORE=a15_0 txt
 endif
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/vip_single_cam_sgx_display MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
 ifeq ($(UC_lvds_vip_multi_cam_8ch_sgx_display),yes)
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/lvds_vip_multi_cam_8ch_sgx_display MODNAME=$(MAKEAPPNAME) CORE=a15_0 $(TARGET)
 endif

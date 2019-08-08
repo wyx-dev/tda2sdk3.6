@@ -1,0 +1,149 @@
+/******************************************************************************
+
+Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
+
+******************************************************************************/
+
+
+/*******************************************************************************
+ *
+ * 文件: main.c
+ *
+ * 描述: 该文件提供HAL 模块测试各个模块功能的接口函数
+ *
+ ******************************************************************************/
+
+#include "main.h"
+
+#define YUV_LEN 2
+#define YUV_STUFF "yuv"
+#define RGB_LEN 3
+#define RGB_STUFF "bgr"
+#define VPE_RESIZE_NUM 5
+
+bool Wait_exit;
+int channel_num = 0;
+int g_image_data_len = 720*1280*3/2;
+char *g_image_data = NULL;
+
+float img_sufix_len[5]={1.5,3,1.5,3,3};
+char *img_sufix[5]={"yuv","bgr","yuv","bgr","bgr"};
+hal_frame_resize_t resize_config[VPE_RESIZE_NUM] = {
+	{  0,   0, 1280, 720, 1280, 720, HAL_FRAME_FORMAT_YUV420SP_UV ,false},
+	{  0,   0, 1280, 720, 1280, 720, HAL_FRAME_FORMAT_RGB24_888   ,true },
+	{  0, 160, 1280, 720,  512, 224, HAL_FRAME_FORMAT_YUV420SP_UV ,true },
+	{ 22,   0, 1258, 720,  384, 224, HAL_FRAME_FORMAT_RGB24_888   ,true },
+	{332, 180,  948, 560,  384, 224, HAL_FRAME_FORMAT_RGB24_888   ,true },
+};
+
+
+static void SigHandler(int signum)
+{
+    signal(SIGKILL, SIG_IGN);
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTERM, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGSTOP, SIG_IGN);
+    signal(SIGHUP, SIG_IGN);
+
+    Wait_exit = false;
+
+    signal(SIGKILL, SIG_DFL);
+    signal(SIGINT, SIG_DFL);
+    signal(SIGTERM, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
+    signal(SIGSTOP, SIG_DFL);
+    signal(SIGHUP, SIG_DFL);
+}
+
+static void SigSetup(void)
+{
+    struct sigaction action;
+
+    memset(&action, 0, sizeof(action));
+    action.sa_handler = SigHandler;
+
+    sigaction(SIGKILL, &action, NULL);
+    sigaction(SIGINT, &action, NULL);
+    sigaction(SIGTERM, &action, NULL);
+    sigaction(SIGQUIT, &action, NULL);
+    sigaction(SIGSTOP, &action, NULL);
+    sigaction(SIGHUP, &action, NULL);
+}
+
+//typedef void (*HAL_FRMDATA_CB)(hal_frame_data_t *frmdata);
+void hubing_test(hal_frame_data_t *frmdata)
+{
+	while(1)
+	{
+		printf("\n ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n");
+	}
+}
+/*******************************************************************************
+ *  函数名：_cam_save_local_thread_func
+ *  描述：保持图片到本地时，所使用的线程服务函数
+ *  输入：
+ *    ptr：创建线程时传入的参数，此处是channel id
+ *  输出：void *
+ *  返回：无
+ *  备注：无
+ *******************************************************************************/
+static void *_cam_save_local_thread_func(void *ptr)
+{
+	while (Wait_exit)
+	{
+		printf("\n##################_cam_save_local_thread_func##############################\n");
+	}
+	pthread_exit(0);
+}
+
+/*******************************************************************************
+ *  函数名：camera_run
+ *  描述：测试hal camera总入口
+ *  输入：无
+ *  输出：无
+ *  返回：无
+ *  备注：基于TI SDK的测试hal camera接口时才会用到
+ *******************************************************************************/
+void camera_run(void)
+{
+	int i = 0,ret = 0, group_index = 0, framerate = 25;
+	int cam_channel[4] = {0,1,2,3};
+	pthread_t cam_pthread_id[4];
+
+	SigSetup();
+	channel_num = 1;
+	Wait_exit = true;
+
+	/*set resize to multi output*/
+	hal_camera_set_resize(resize_config, VPE_RESIZE_NUM);
+
+	ret = hal_camera_init("./camera.conf", group_index, channel_num, framerate, HAL_FRAME_FORMAT_YUV420SP_UV, hubing_test);
+	if (ret < 0)
+	{
+		printf("\r\n### hal_camera_run ### hal_camera_init ERROR !!!\r\n");
+		return ;
+	}
+
+	for (i = 0; i < channel_num; i++)
+	{
+		pthread_create(&cam_pthread_id[i], NULL, _cam_save_local_thread_func, &cam_channel[i]);
+		usleep(10);
+	}
+
+	for (i = 0; i < channel_num; i++)
+	{
+		pthread_join(cam_pthread_id[i], NULL);
+	}
+
+	hal_camera_deinit(channel_num);
+}
+
+int main(int argc, char **argv)
+{
+	hal_arch_init();
+	camera_run();
+	hal_arch_deinit();
+
+	return 0;
+}

@@ -62,7 +62,47 @@ ifeq ($(A15_TARGET_OS), Linux)
 	$(MAKE) app_linux_install
 endif
 
+HAL=
+export HAL
+
 apps_hlos:
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_camera MODNAME=hal_camera CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_camera MODNAME=hal_camera CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_multi_camera_display MODNAME=hal_multi_camera_display CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_multi_camera_display MODNAME=hal_multi_camera_display CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_camera_display MODNAME=hal_single_camera_display CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_camera_display MODNAME=hal_single_camera_display CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_multi_camera_save_local MODNAME=hal_multi_camera_save_local CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_multi_camera_save_local MODNAME=hal_multi_camera_save_local CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_camera_save_local MODNAME=hal_single_camera_save_local CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_camera_save_local MODNAME=hal_single_camera_save_local CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_cam_vpe_resize_save MODNAME=hal_single_cam_vpe_resize_save CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_cam_vpe_resize_save MODNAME=hal_single_cam_vpe_resize_save CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_cam_vpe_sad MODNAME=hal_single_cam_vpe_sad CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_single_cam_vpe_sad MODNAME=hal_single_cam_vpe_sad CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_offline_cam_vpe_sad MODNAME=hal_offline_cam_vpe_sad CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_offline_cam_vpe_sad MODNAME=hal_offline_cam_vpe_sad CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_offline_feed_cam_vpe_sad MODNAME=hal_offline_feed_cam_vpe_sad CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_offline_feed_cam_vpe_sad MODNAME=hal_offline_feed_cam_vpe_sad CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_can MODNAME=hal_can CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_can MODNAME=hal_can CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_arch MODNAME=hal_arch CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_arch MODNAME=hal_arch CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_imu MODNAME=hal_imu CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_imu MODNAME=hal_imu CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 lib
+ifeq ($(HAL), hal)
+	@echo "----------------------------------------------start hal so compile add by hubing----------------------------"
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/apps/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/system/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/osa/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/utils/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/links*/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/network_utils/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main CORE=a15_0 hal_test_main_exe
+	@echo "----------------------------------------------end hal so compile--------------------------------------------"
+endif
 ifeq ($(A15_TARGET_OS), Linux)
 ifneq ($(ROBUST_RVC_INCLUDE), yes)
 	$(MAKE) links_fw_libs_hlos
@@ -75,6 +115,11 @@ endif
 ifeq ($(A15_TARGET_OS), Qnx)
 	$(MAKE) qnx
 endif
+
+hal_clean:
+	@echo "----------------------------------------------start to clean hal obj add by hubing----------------------------"
+	rm -fr $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal*
+	@echo "----------------------------------------------end to clean hal obj --------------------------------------------"
 
 opencx:
 ifeq ($(A15_TARGET_OS), Bios)
@@ -105,7 +150,7 @@ ifeq ($(A15_TARGET_OS), Linux)
 	$(MAKE) -C $(vision_sdk_PATH)/build/hlos/makerules/linux -fbuild_opencl.mk _vision_sdk_opencl_clean BUILD_LLVM=$(BUILD_LLVM)
 endif
 
-clean: pdk_clean edma3lld_clean app_alg_plugins_clean links_fw_libs_clean apps_libs_clean
+clean: pdk_clean edma3lld_clean app_alg_plugins_clean links_fw_libs_clean apps_libs_clean hal_clean
 ifeq ($(A15_TARGET_OS),Linux)
 # Bydefault IPUMM build is not enabled from VSDK.
 # Assume IPUMM libs are present in mm_PATH for the IPUMM_INCLUDE to work.
@@ -643,6 +688,9 @@ help:
 	$(ECHO) '# gmake -s -j links_fw_libs          // Build Vision SDK framework library'
 	$(ECHO) '# gmake -s -j vision_sdk_alg_plugins // Build Vision SDK algo plugins'
 	$(ECHO) '# gmake -s -j apps                   // Build Vision SDK BIOS applications binaries'
+	$(ECHO) '# gmake -s -j apps_hlos              // Build apps.out with linux all at A15'
+	$(ECHO) '# gmake -s -j apps_hlos HAL=hal      // Build hal_release applications binaries'
+	$(ECHO) '# gmake -s -j hal_clean              // Clean Hal obj binaries'
 	$(ECHO) \#
 	$(ECHO) \# Linux related targets,
 	$(ECHO) '# gmake -s -j linux             // Build linux kernel, uboot, sgx drivers'

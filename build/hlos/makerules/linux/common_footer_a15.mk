@@ -50,6 +50,13 @@ ifdef MODNAME
 	ifneq ($(APP_LIB),$(filter $(APP_LIB), $(APP_LIB_LIST)))
 		NEW_LIB = $(APP_LIB)
 	endif
+	ifneq ("$(wildcard $(DEST_ROOT)/appHalLiblist_$(CORE).txt)","")
+		APP_HAL_LIB_LIST = $(shell $(CAT) $(DEST_ROOT)/appHalLiblist_$(CORE).txt)
+	endif
+	APP_HAL_LIB = $(LIB_DIR)/$(MODNAME).a
+	ifneq ($(APP_HAL_LIB),$(filter $(APP_HAL_LIB), $(APP_HAL_LIB_LIST)))
+		NEW_HAL_LIB = $(APP_HAL_LIB)
+	endif
 endif
 
 lib : $(LIB_DIR)/$(LIB)
@@ -66,7 +73,14 @@ $(LIB_DIR)/$(LIB) : $(OBJS) $(OBJSCPP)
 	@echo \# $(MODNAME): $(PLATFORM): Creating archive $(LIB)
 	$(AR)	$(AR_OPTS) $(LIB_DIR)/$(LIB) $(OBJ_DIR)/*.o
 ifeq ($(NEW_LIB),$(APP_LIB))
+ifneq ($(MODNAME),$(filter $(MODNAME),app_main hal_arch hal_test hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_imu))
 	@echo $(NEW_LIB) >> $(DEST_ROOT)/appLiblist_$(CORE).txt
+endif
+endif
+ifeq ($(NEW_HAL_LIB),$(APP_HAL_LIB))
+ifeq ($(MODNAME),$(filter $(MODNAME), hal_arch hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_imu))
+	@echo $(NEW_HAL_LIB) >> $(DEST_ROOT)/appHalLiblist_$(CORE).txt
+endif
 endif
 
 obj: $(OBJS) $(OBJSCPP)
@@ -91,7 +105,7 @@ so:
 	@echo \#
 exe:
 	@echo \# $(MODNAME): $(PLATFORM): Linking
-	$(LD) $(LD_OPTS) $(LIBS) $(OPENCV_LIBS) $(LIB_SRV) -o$(EXE)
+	$(LD) $(LD_OPTS) $(shell cat $(DEST_ROOT)/appMainLiblist_$(CORE).txt) $(LIBS) $(OPENCV_LIBS) $(LIB_SRV) $(shell cat $(DEST_ROOT)/appHalLiblist_$(CORE).txt) -o$(EXE)
 	@echo \# Final executable $(EXE) !!!
 	@echo \#
 

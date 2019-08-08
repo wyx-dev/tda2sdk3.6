@@ -1,0 +1,46 @@
+digraph chains_hal_offline_feed_cam_vpe_sad {
+
+       ColorScheme [shape=none, margin=0, label=<
+       <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+       <TR><TD bgcolor="lightblue">IPU1_0</TD></TR>
+       <TR><TD bgcolor="lightsalmon">A15</TD></TR>
+       </TABLE>>];
+
+       /************** LINKS ************************/
+       Capture [color=lightblue, style=filled]
+       Null_m4 [color=lightblue, style=filled]
+       NullSource [color=lightsalmon, style=filled]
+       IPCOut_A15_0_IPU1_0_0 [color=lightsalmon, style=filled]
+       IPCIn_IPU1_0_A15_0_0 [color=lightblue, style=filled]
+       Dup_cap [color=lightblue, style=filled]
+       VPE_resize_3 [color=lightblue, style=filled]
+       VPE_resize_2 [color=lightblue, style=filled]
+       VPE_resize_1 [color=lightblue, style=filled]
+       VPE_resize_0 [color=lightblue, style=filled]
+       Merge_vpe [color=lightblue, style=filled]
+       Sync_vpe [color=lightblue, style=filled]
+       IPCOut_IPU1_0_A15_0_0 [color=lightblue, style=filled]
+       IPCIn_A15_0_IPU1_0_0 [color=lightsalmon, style=filled]
+       Null [color=lightsalmon, style=filled]
+       Display [color=lightblue, style=filled]
+
+       /************** CONNECTIONS ************************/
+       Capture -> Null_m4
+       Dup_cap -> Display[taillabel=Q0, minlen=2, labeldistance=3]
+       Dup_cap -> Merge_vpe[headlabel=Q0, taillabel=Q1, minlen=2, labeldistance=3]
+       Dup_cap -> VPE_resize_0[taillabel=Q2, minlen=2, labeldistance=3]
+       Dup_cap -> VPE_resize_1[taillabel=Q3, minlen=2, labeldistance=3]
+       Dup_cap -> VPE_resize_2[taillabel=Q4, minlen=2, labeldistance=3]
+       Dup_cap -> VPE_resize_3[taillabel=Q5, minlen=2, labeldistance=3]
+       NullSource -> IPCOut_A15_0_IPU1_0_0
+       Merge_vpe -> Sync_vpe
+       VPE_resize_0 -> Merge_vpe[headlabel=Q1 minlen=2, labeldistance=3]
+       VPE_resize_1 -> Merge_vpe[headlabel=Q2 minlen=2, labeldistance=3]
+       VPE_resize_2 -> Merge_vpe[headlabel=Q3 minlen=2, labeldistance=3]
+       VPE_resize_3 -> Merge_vpe[headlabel=Q4 minlen=2, labeldistance=3]
+       Sync_vpe -> IPCOut_IPU1_0_A15_0_0
+       IPCOut_A15_0_IPU1_0_0 -> IPCIn_IPU1_0_A15_0_0
+       IPCIn_IPU1_0_A15_0_0 -> Dup_cap
+       IPCOut_IPU1_0_A15_0_0 -> IPCIn_A15_0_IPU1_0_0
+       IPCIn_A15_0_IPU1_0_0 -> Null
+}

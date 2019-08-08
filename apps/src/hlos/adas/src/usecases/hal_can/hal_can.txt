@@ -1,0 +1,9 @@
+
+# bring up socket CAN0 use cmds as follow:
+
+ip link set can0 type can bitrate 500000
+
+ip link set can0 up
+
+
+
