@@ -20,7 +20,7 @@
 #
 BUILD_DEPENDENCY_ALWAYS=no
 
-TREAT_WARNINGS_AS_ERROR=yes
+TREAT_WARNINGS_AS_ERROR=no
 
 
 # Set the PACKAGE_SELECT option for pdk to individually control VIP, VPE and DSS
