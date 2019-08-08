@@ -237,6 +237,7 @@ static Int32 SystemLink_cmdHandler(SystemLink_Obj * pObj, UInt32 cmd, Void * pPr
             Utils_cbufOcmcInit(UTILS_OCMC_RAM2);
             Utils_cbufOcmcInit(UTILS_OCMC_RAM3);
         }
+            break;
         case 0xabcd0002:
         {
 		Vps_printf(">>>>>>> 0xabcd0002");
