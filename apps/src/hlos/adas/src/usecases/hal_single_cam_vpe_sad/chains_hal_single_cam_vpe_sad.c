@@ -126,8 +126,8 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
         pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
         pObj->vidSensorPrm.numLvdsCh = 1;
 
-        //TODO lizhihao@momenta.ai:temporary solution for HDMI_camera_flag
-        pUcObj->DisplayPrm.hdmi_camera_flag = 1;
+        //TODO lizhihao@momenta.ai:image encode
+        pUcObj->CapturePrm.hdmi_camera_flag = 1;
 
         Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
         System_linkControl(SYSTEM_LINK_ID_IPU1_0,
@@ -141,8 +141,8 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
         pObj->vidSensorPrm.isLVDSCaptMode = true;
         pObj->vidSensorPrm.numLvdsCh = 1;
 
-        //TODO lizhihao@momenta.ai:temporary solution for HDMI_camera_flag
-        pUcObj->DisplayPrm.hdmi_camera_flag = 0;
+        //TODO lizhihao@momenta.ai:image encode
+        pUcObj->CapturePrm.hdmi_camera_flag = 0;
 
         System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
                             APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START,
@@ -462,13 +462,14 @@ Void hal_single_cam_vpe_sad_null_link_callback(System_LinkChInfo *pChInfo, Void 
             g_camera_save_local_obj.resize_config[ret].output_height *
             g_camera_save_local_obj.outVpeResizeColorCopyLen[ret];
 
+	OSA_memCacheInv((unsigned int)pSysCompBuf->bufAddr[0][ret], frmdata.len);
         frmdata.resize_buf[ret] = pSysCompBuf->bufAddr[0][ret];
-        //TODO lizhihao@momenta.ai: temporary solution for image decode
+        //START lizhihao@momenta.ai:image decode
         if(ret == 0)
         {
             int j,k,l;
             int bitcol = 20;
-            int bitrow = 1;
+            int bitrow = 2;
             UInt64 timestamp = 0;
             for(j=63;j>-1;j--)
             {
@@ -478,22 +479,24 @@ Void hal_single_cam_vpe_sad_null_link_callback(System_LinkChInfo *pChInfo, Void 
                 {
                     for(l=0;l<bitrow;l++)
                     {
-                        y_sum += frmdata.resize_buf[ret][offset+k+l*1280];
+                        y_sum += frmdata.resize_buf[ret][offset+k+(l+1)*1280];
                     }
                 }
                 y_sum /= bitcol*bitrow;
                 if(y_sum>127)
                 {
-                    timestamp = (timestamp << 1) + 1;
+                    timestamp = timestamp << 1;
                 }
                 else
                 {
-                    timestamp = timestamp << 1;
+                    timestamp = (timestamp << 1) + 1;
                 }
             }
             timestamp >>= 8;
             frmdata.hw_timestamp = timestamp;
+	    // printf("nulllink:%llu %llu\n",sys_buf->srcTimestamp,timestamp);
         }
+	//END lizhihao@momenta.ai:image decode
     }
 
     /*call callback func*/

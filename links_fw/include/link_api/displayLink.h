@@ -333,8 +333,6 @@ typedef struct
      *   This needs to be configured at create time as well,
      *   IF not set, then assume tarWidth & tarHeight as input
      *   width & height and both posX & posY as 0 */
-    //TODO lizhihao@momenta.ai:temporary solution for HDMI_camera_flag
-    UInt8 hdmi_camera_flag;
 } DisplayLink_CreateParams;
 
 /**

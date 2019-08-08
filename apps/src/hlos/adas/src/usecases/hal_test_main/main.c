@@ -115,7 +115,7 @@ static void* _cam_save_local_thread_func(void* ptr)
 		ret = hal_camera_get_frame(&frmdata,1000);
 		if((0 == ret) && ((count_frame%10) == 0))
 		{
-			#if 1
+			#if 0
 			char file_name[64] = {0};
 			long long timeout = 0;
 			memset(file_name, 0, 64);

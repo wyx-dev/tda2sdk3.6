@@ -646,6 +646,9 @@ typedef struct
     System_LinkMemAllocInfo memAllocInfo;
     /**< Memory alloc region info, used to pass user alloc memory address */
 
+    //TODO lizhihao@momenta.ai: image encode
+    UInt8 hdmi_camera_flag;
+
 } CaptureLink_CreateParams;
 
 /**

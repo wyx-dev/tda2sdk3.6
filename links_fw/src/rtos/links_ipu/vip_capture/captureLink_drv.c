@@ -769,6 +769,44 @@ Int32 CaptureLink_drvProcessData(CaptureLink_Obj * pObj, UInt32 instId)
                  * from driver
                  */
                 sysBuf->srcTimestamp = Utils_getCurGlobalTimeInUsec();
+                //START lizhihao@momenta.ai: image encode
+		if(pObj->createArgs.hdmi_camera_flag == 0)
+                {
+                    uint32_t i = 0,j = 0,k = 0,l = 0,offset = 0;
+                    uint32_t bitcol = 20;
+                    uint32_t bitrow = 2;
+                    uint8_t *pdata;
+                    uint64_t time;
+		    pdata = ((System_VideoFrameBuffer*)(sysBuf->payload))->bufAddr[0];
+		    time = sysBuf -> srcTimestamp << 8;
+		    for(j=0;j<64;j++)
+		    {
+			offset = j * bitcol;
+			if(time % 2)
+			{
+			    for(k=0;k<bitcol;k++)
+			    {
+				for(l=0;l<bitrow;l++)
+				{
+				    pdata[k+offset+(l+1)*1280] = 0x00;
+				}
+			    }
+			}
+			else
+			{
+			    for(k=0;k<bitcol;k++)
+			    {
+				for(l=0;l<bitrow;l++)
+				{
+				    pdata[k+offset+(l+1)*1280] = 0xff;
+				}
+			    }
+			}
+			time >>= 1;
+		    }
+
+                }
+                //END lizhihao@momenta.ai: image encode
                 pObj->instObj[instId].frameId = (pObj->instObj[instId].frameId + 1U);
                 sysBuf->frameId = pObj->instObj[instId].frameId;
                 sysBuf->linkLocalTimestamp = sysBuf->srcTimestamp;
