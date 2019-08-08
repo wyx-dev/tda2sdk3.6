@@ -386,13 +386,14 @@ static int hal_single_cam_vpe_sad_get_timestamp(hal_frame_data_t *frmdata, UInt6
 	struct timeval time;
 	UInt64	a15Timestamp = 0;
 	UInt64	deltaTimestamp;
+	frmdata->hw_timestamp = m4_timestamp;
 
-	//Vps_printf("\n--Enter-----hal_single_camera_get_timestamp--------\n");
 	a15Timestamp = OSA_getCurGlobalTimeInUsec();
 	if(a15Timestamp < m4_timestamp){
 		Vps_printf("\n--Error!!!-----a15Timestamp=%lld < m4_timestamp=%lld--------\n",a15Timestamp,m4_timestamp);
 		return -1;
 	}
+
 	deltaTimestamp = a15Timestamp - m4_timestamp;
 	gettimeofday(&time, NULL);
 

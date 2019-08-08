@@ -689,6 +689,48 @@ Int32 DisplayLink_drvProcessData(DisplayLink_Obj *pObj)
     System_getLinksFullBuffers(pInQueParams->prevLinkId,
                                pInQueParams->prevLinkQueId,
                                &bufList);
+    //START lizhihao@momenta.ai: temporary solution for image encode
+    {
+        uint32_t i = 0,j = 0,k = 0,l = 0,offset = 0;
+        uint32_t num = bufList.numBuf;
+        uint32_t bitcol = 20;
+        uint32_t bitrow = 1;
+        uint8_t *pdata;
+        uint64_t time;
+        for(i=0;i<num;i++)
+        {
+            pdata = ((System_VideoFrameBuffer*)(bufList.buffers[i]->payload))->bufAddr[0];
+	   // printf("timestamp:%llu\n",bufList.buffers[i] -> srcTimestamp);
+            time = bufList.buffers[i] -> srcTimestamp << 8;
+            for(j=0;j<64;j++)
+            {
+                offset = j * bitcol;
+                if(time % 2)
+                {
+                    for(k=0;k<bitcol;k++)
+                    {
+                        for(l=0;l<bitrow;l++)
+                        {
+                            pdata[k+offset+l*1280] = 0xff;
+                        }
+                    }
+                }
+                else
+                {
+                    for(k=0;k<bitcol;k++)
+                    {
+                        for(l=0;l<bitrow;l++)
+                        {
+                            pdata[k+offset+l*1280] = 0x00;
+                        }
+                    }
+                }
+                time >>= 1;
+            }
+        }
+
+    }
+    //END lizhihao@momenta.ai: temporary solution for image encode
 
     if(pObj->isDisplayRunning)
     {
