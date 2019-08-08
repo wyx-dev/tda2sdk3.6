@@ -9,14 +9,10 @@
 #include <src/hlos/adas/include/chains.h>
 #include <src/hlos/common/chains_common.h>
 
-// #define CAPTURE_SENSOR_WIDTH        (1280)
-// #define CAPTURE_SENSOR_HEIGHT       (720)
-#define CAPTURE_SENSOR_WIDTH        (1920)
-#define CAPTURE_SENSOR_HEIGHT       (1080)
-// #define LCD_DISPLAY_WIDTH           (1280)
-// #define LCD_DISPLAY_HEIGHT          (720)
-#define LCD_DISPLAY_WIDTH           (1920)
-#define LCD_DISPLAY_HEIGHT          (1080)
+#define CAPTURE_SENSOR_WIDTH        (1280)
+#define CAPTURE_SENSOR_HEIGHT       (720)
+#define LCD_DISPLAY_WIDTH           (1280)
+#define LCD_DISPLAY_HEIGHT          (720)
 #define NULLSRC_OUT_WIDTH           (1280)
 #define NULLSRC_OUT_HEIGHT          (720)
 #define TILOGO_WIDTH                (1280)
