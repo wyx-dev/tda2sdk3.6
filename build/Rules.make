@@ -57,7 +57,7 @@ MAKEAPPNAME?=apps
 #    tda2px_evm_bios_iss
 #
 #
-MAKECONFIG?=tda2xx_evm_bios_all
+MAKECONFIG?=tda2xx_evm_linux_all
 
 # Default build environment
 # Options: Windows_NT or Linux
