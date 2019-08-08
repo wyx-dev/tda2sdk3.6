@@ -94,6 +94,7 @@ typedef struct {
 	pthread_cond_t cond[4];
 	char *offlineDataFileName;
 	unsigned long long offlineDataIndex;
+	UInt8 hdmi_camera_flag;
 } _camera_save_local_obj;
 
 

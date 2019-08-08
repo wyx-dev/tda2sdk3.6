@@ -106,24 +106,76 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
 
     pObj->captureOutWidth  = CAPTURE_SENSOR_WIDTH;
     pObj->captureOutHeight = CAPTURE_SENSOR_HEIGHT;
-#if 1
-    ChainsCommon_SingleCam_SetCapturePrms(&(pUcObj->CapturePrm),
-            CAPTURE_SENSOR_WIDTH,
-            CAPTURE_SENSOR_HEIGHT,
-            pObj->captureOutWidth,
-            pObj->captureOutHeight,
-            pObj->chainsCfg->captureSrc
-            );
-#endif
-    pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_720P;//CHAINS_CAPTURE_SRC_HDMI_1080P;//pObj->chainsCfg->captureSrc;
-    pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
-    pObj->vidSensorPrm.numLvdsCh = 1;
 
     ChainsCommon_GetDisplayWidthHeight(
                                 pObj->chainsCfg->displayType,
                                 &pObj->displayOutWidth,
                                 &pObj->displayOutHeight
                                 );
+
+    if(g_camera_save_local_obj.hdmi_camera_flag)
+    {
+        ChainsCommon_SingleCam_SetCapturePrms(&(pUcObj->CapturePrm),
+                CAPTURE_SENSOR_WIDTH,
+                CAPTURE_SENSOR_HEIGHT,
+                pObj->captureOutWidth,
+                pObj->captureOutHeight,
+                pObj->chainsCfg->captureSrc
+                );
+        pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_720P;
+        pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
+        pObj->vidSensorPrm.numLvdsCh = 1;
+
+        Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
+        System_linkControl(SYSTEM_LINK_ID_IPU1_0,
+                                    0xabcd0002,
+                                    NULL,
+                                    0,
+                                    TRUE);
+
+    }else{
+        pObj->vidSensorPrm.captureSrcId = pObj->chainsCfg->captureSrc;;
+        pObj->vidSensorPrm.isLVDSCaptMode = true;
+        pObj->vidSensorPrm.numLvdsCh = 1;
+
+        System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
+                            APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START,
+                            &pObj->vidSensorPrm,
+                            sizeof(VideoSensorCreateAndStartAppPrm),
+                            TRUE);
+
+        if(pObj->vidSensorPrm.captureSrcId == CHAINS_CAPTURE_SRC_XC7027)
+        {
+            System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
+                            APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_START,
+                            &pObj->vidSensorPrm,
+                            sizeof(VideoSensorCreateAndStartAppPrm),
+                            TRUE);
+        }
+       	ChainsCommon_MultiCam_SetCapturePrms(&pUcObj->CapturePrm,
+                            pObj->vidSensorPrm.numLvdsCh);
+
+	    chains_hal_single_cam_vpe_sad_set_output_frame_prms(&pUcObj->CapturePrm);
+    }
+
+// #if 1
+//     ChainsCommon_SingleCam_SetCapturePrms(&(pUcObj->CapturePrm),
+//             CAPTURE_SENSOR_WIDTH,
+//             CAPTURE_SENSOR_HEIGHT,
+//             pObj->captureOutWidth,
+//             pObj->captureOutHeight,
+//             pObj->chainsCfg->captureSrc
+//             );
+// #endif
+    // pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_720P;//CHAINS_CAPTURE_SRC_HDMI_1080P;//pObj->chainsCfg->captureSrc;
+    // pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
+    // pObj->vidSensorPrm.numLvdsCh = 1;
+
+    // ChainsCommon_GetDisplayWidthHeight(
+    //                             pObj->chainsCfg->displayType,
+    //                             &pObj->displayOutWidth,
+    //                             &pObj->displayOutHeight
+    //                             );
 #if 0
     System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
                                 APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START,
@@ -140,14 +192,14 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
                                 TRUE);
     }
 #endif
-#if 1
-Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
-    System_linkControl(SYSTEM_LINK_ID_IPU1_0,
-                                0xabcd0002,
-                                NULL,
-                                0,
-                                TRUE);
-#endif
+// #if 1
+// Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
+//     System_linkControl(SYSTEM_LINK_ID_IPU1_0,
+//                                 0xabcd0002,
+//                                 NULL,
+//                                 0,
+//                                 TRUE);
+// #endif
 
 	// ChainsCommon_MultiCam_SetCapturePrms(&pUcObj->CapturePrm,
     //                             pObj->vidSensorPrm.numLvdsCh);
@@ -292,9 +344,13 @@ Void chains_hal_single_cam_vpe_sad(Chains_Ctrl *chainsCfg)
     char ch;
     UInt32 done = FALSE;
     Chains_hal_single_cam_vpe_sadAppObj chainsObj;
-    chainsCfg->displayType = CHAINS_DISPLAY_TYPE_HDMI_720P;
-    chainsCfg->captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+
     chainsObj.chainsCfg = chainsCfg;
+
+    if(g_camera_save_local_obj.hdmi_camera_flag){
+        chainsCfg->displayType = CHAINS_DISPLAY_TYPE_HDMI_720P;
+        chainsCfg->captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+    }
 
     chains_hal_single_cam_vpe_sad_Create(&chainsObj.ucObj, &chainsObj);
 

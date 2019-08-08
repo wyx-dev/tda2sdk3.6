@@ -28,6 +28,7 @@ HAL_FRMDATA_CB g_frame_cb = NULL;
 _camera_save_local_obj g_camera_save_local_obj =
 {
 	.resize_chnl_num = 0,
+	.hdmi_camera_flag = 0,
 };
 
 hal_run_mode_e run_mode;
@@ -88,19 +89,24 @@ static int _config_file_parser(const char *file_name)
 	{
 		if (0 == strcmp("OV10635", s))
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_OV10635;
 		}
 		else if (0 == strcmp("OV2718_XC7027", s))
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_XC7027;
 		}
 		else if (0 == strcmp("OV10640_OV490", s))
 		{
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_OV490_OV10640;
+		}
+		else if (0 == strcmp("HDMI_CAMERA", s))
+		{
 			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+			g_camera_save_local_obj.hdmi_camera_flag = 1;
 		}
 		else
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_OV10635;
 		}
 
 		Vps_printf("capture-name:     [%s]\n", s ? s : "UNDEF");
