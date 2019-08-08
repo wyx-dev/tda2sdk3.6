@@ -127,11 +127,11 @@ static void* _cam_save_local_thread_func(void* ptr)
 			char file_name[64] = {0};
 			long long timeout = 0;
 			memset(file_name, 0, 64);
-			timeout = 1000000 * (long long)frmdata.timestamp.tv_sec + frmdata.timestamp.tv_usec;
+			timeout = 1000000 * (long long)frmdata.timestamp.tv_sec + (long long)frmdata.timestamp.tv_usec;
 
 			if(1 == channel_num)
 			{
-				sprintf(file_name, "%ld.%ld.bgr", frmdata.timestamp.tv_sec,frmdata.timestamp.tv_usec);
+				sprintf(file_name, "%lld.%06lld.bgr", (unsigned long long)frmdata.timestamp.tv_sec,(long long)frmdata.timestamp.tv_usec);
 				FILE* fp = fopen(file_name, "wb+");
 				if(fp)
 				{
@@ -139,7 +139,7 @@ static void* _cam_save_local_thread_func(void* ptr)
 					fflush(fp);
 					fclose(fp);
 				}
-				sprintf(time_data, "%ld.%ld\n", frmdata.timestamp.tv_sec,frmdata.timestamp.tv_usec);
+				sprintf(time_data, "%lld.%06lld\n", (unsigned long long)frmdata.timestamp.tv_sec,(long long)frmdata.timestamp.tv_usec);
 				fwrite(time_data, 1, strlen(time_data), ftimestamp);
 				fflush(ftimestamp);
 #if 0
