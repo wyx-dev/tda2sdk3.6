@@ -126,6 +126,9 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
         pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
         pObj->vidSensorPrm.numLvdsCh = 1;
 
+        //TODO lizhihao@momenta.ai:temporary solution for HDMI_camera_flag
+        pUcObj->DisplayPrm.hdmi_camera_flag = 1;
+
         Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
         System_linkControl(SYSTEM_LINK_ID_IPU1_0,
                                     0xabcd0002,
@@ -137,6 +140,9 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
         pObj->vidSensorPrm.captureSrcId = pObj->chainsCfg->captureSrc;;
         pObj->vidSensorPrm.isLVDSCaptMode = true;
         pObj->vidSensorPrm.numLvdsCh = 1;
+
+        //TODO lizhihao@momenta.ai:temporary solution for HDMI_camera_flag
+        pUcObj->DisplayPrm.hdmi_camera_flag = 0;
 
         System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
                             APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START,
