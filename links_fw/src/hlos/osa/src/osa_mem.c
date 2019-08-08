@@ -680,6 +680,66 @@ int OSA_memDeInit(void)
     return status;
 }
 
+Void* OSA_memAllocPhysSR(UInt32 heapId, UInt32 size, UInt32 align)
+{
+    Void *addr = NULL;
+
+    if(heapId>=OSA_HEAPID_MAXNUMHEAPS)
+        return NULL;
+
+    if(heapId==OSA_HEAPID_DDR_NON_CACHED_SR0)
+    {
+        heapId = SYSTEM_HEAPID_DDR_NON_CACHED_SR0;
+    }
+    else if(heapId==OSA_HEAPID_DDR_CACHED_SR1)
+    {
+        heapId = SYSTEM_HEAPID_DDR_CACHED_SR1;
+    }
+    else
+    {
+        OSA_assert(0);
+    }
+    /*
+     * Allocate from heap created on IPU1-0
+     */
+    SystemCommon_AllocBuffer bufAlloc;
+    Int32 status = SYSTEM_LINK_STATUS_SOK;
+
+    bufAlloc.bufferPtr = (UInt32)NULL;
+    bufAlloc.heapId = heapId;
+    bufAlloc.size = size;
+    bufAlloc.align = align;
+
+    /*
+     * Alloc by sending command to IPU1-0 core
+     */
+    status = System_linkControl(
+                SYSTEM_LINK_ID_IPU1_0,
+                SYSTEM_COMMON_CMD_ALLOC_BUFFER,
+                &bufAlloc,
+                sizeof(bufAlloc),
+                TRUE
+                );
+    if(status != SYSTEM_LINK_STATUS_SOK)
+    {
+        return NULL;
+    }
+    else
+    {
+        addr = (Ptr)bufAlloc.bufferPtr;
+    }
+
+    #ifdef OSA_DEBUG_MEM
+    Vps_printf(" OSA: MEM: ALLOC, addr = 0x%08x, size = %d bytes, heapId = %d \n",
+            addr,
+            size,
+            heapId
+           );
+    #endif
+
+    return addr;
+}
+
 Void* OSA_memAllocSR(UInt32 heapId, UInt32 size, UInt32 align)
 {
     Void *addr = NULL;

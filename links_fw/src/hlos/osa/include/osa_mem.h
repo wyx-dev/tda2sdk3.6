@@ -114,6 +114,7 @@ unsigned int OSA_memMapHeapIdToRegionId(Osa_HeapId heapId);
 int OSA_memCacheWb(unsigned int virtAddrStart, unsigned int virtAddrEnd);
 int OSA_memCacheInv(unsigned int virtAddr, unsigned int length);
 
+Void* OSA_memAllocPhysSR(UInt32 heapId, UInt32 size, UInt32 align);
 Void* OSA_memAllocSR(UInt32 heapId, UInt32 size, UInt32 align);
 Int32 OSA_memFreeSR(UInt32 heapId, Ptr addr, UInt32 size);
 

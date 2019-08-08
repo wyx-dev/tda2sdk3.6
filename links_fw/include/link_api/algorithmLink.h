@@ -289,7 +289,18 @@ typedef enum
     ALGORITHM_LINK_DSP_ALG_TIOP = 39,
     /**< Alg to perform Object Propagation */
 
-    ALGORITHM_LINK_DSP_ALG_MAXNUM = 40,
+    ALGORITHM_LINK_DSP_ALG_WARP_AFFINE = 40,
+    /**< Alg to perform Warp Affine */
+
+    ALGORITHM_LINK_DSP_ALG_MATCH_TEMPLATE = 41,
+    /**< Alg to perform Match Template */
+
+    ALGORITHM_LINK_DSP_ALG_MATCH_TEMPLATE_CLASSIC = 42,
+    /**< Alg to perform Match Template Classic */
+
+    ALGORITHM_LINK_DSP_ALG_SPARSE_OPTICAL_FLOW = 43,
+    /**< Alg to get flow vectors(Sparse Optical Flow) */
+    ALGORITHM_LINK_DSP_ALG_MAXNUM = 44,
     /**< Should be the last value of this enumeration.
      *   Will be used by Link/driver for validating the input parameters. */
 

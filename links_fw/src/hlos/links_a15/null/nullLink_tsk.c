@@ -189,6 +189,9 @@ Int32 NullLink_drvProcessFrames(NullLink_Obj * pObj)
 
             for (bufId = 0; bufId < bufList.numBuf; bufId++)
             {
+                chNum = bufList.buffers[bufId]->chNum;
+                OSA_assert (chNum < SYSTEM_MAX_CH_PER_OUT_QUE);
+                bitstreamBuf = ((System_BitstreamBuffer *)bufList.buffers[bufId]->payload);
                 pChInfo = \
                 &pObj->inQueInfo[queId].chInfo[bufList.buffers[bufId]->chNum];
 
@@ -294,6 +297,13 @@ Int32 NullLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 cur
 
                 NullLink_drvProcessFrames(pObj);
                 break;
+			case SYSTEM_CMD_USER0:
+				pObj->createArgs.appCb(
+                                    NULL,
+                                    (Void*)pMsg->pPrm,
+                                    pObj->createArgs.appCbArg);
+				OSA_tskAckOrFreeMsg(pMsg, status);
+				break;
             default:
                 OSA_tskAckOrFreeMsg(pMsg, status);
                 break;

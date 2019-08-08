@@ -143,7 +143,7 @@ void NullSrcLink_timerCallback(union sigval arg)
 
     if(FALSE == pObj->createArgs.pauseLink)
     {
-        System_sendLinkCmd(pObj->tskId, SYSTEM_CMD_NEW_DATA, NULL);
+        //System_sendLinkCmd(pObj->tskId, SYSTEM_CMD_NEW_DATA, NULL);
         pObj->numPendingCmds++;
 
         pObj->linkStats.notifyEventCount++;
@@ -558,7 +558,8 @@ Int32 NullSrcLink_processData(NullSrcLink_Obj * pObj)
 Int32 NullSrcLink_start(NullSrcLink_Obj * pObj)
 {
     Int32 status;
-    pObj->timerHndl.period = 33;
+    // pObj->timerHndl.period = 100;
+    pObj->timerHndl.period = pObj->createArgs.timerPeriodMilliSecs;
     status = OSA_timerStart(&pObj->timerHndl);
     OSA_assert(status == OSA_SOK);
 
@@ -1249,6 +1250,7 @@ Int32 NullSrcLink_pause(NullSrcLink_Obj *pObj)
 Int32 NullSrcLink_resume(NullSrcLink_Obj *pObj)
 {
     pObj->createArgs.pauseLink = FALSE;
+    System_sendLinkCmd(pObj->tskId, SYSTEM_CMD_NEW_DATA, NULL);
     return SYSTEM_LINK_STATUS_SOK;
 }
 

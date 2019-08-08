@@ -137,7 +137,7 @@ Int32 Utils_eveBoot(void)
 {
     Int32 retVal = SYSTEM_LINK_STATUS_SOK;
     UInt32 sblBuildMode = SBLLIB_SBL_BUILD_MODE_PROD;
-    UInt32 oppId = SBLLIB_PRCM_DPLL_OPP_NOM;
+    UInt32 oppId = SBLLIB_PRCM_DPLL_OPP_HIGH;
     sbllibAppImageParseParams_t appImgParams;
     pmhalPrcmDpllConfig_t      *dpllParams;
     pmhalPrcmSysClkVal_t sysClkFreq = PMHALCMGetSysClockFreqEnum();

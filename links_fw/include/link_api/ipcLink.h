@@ -323,6 +323,66 @@ Int32 IpcInLink_deInit(void);
 /**
  *******************************************************************************
  *
+ *   \brief Null Source IPC link register and init function
+ *
+ *          For each IPC instance
+ *          - Creates link task
+ *          - Registers as a link with the system API
+ *
+ *   \return  SYSTEM_LINK_STATUS_SOK on success
+ *
+ *******************************************************************************
+*/
+Int32 NullSrcIpcOutLink_init(void);
+
+/**
+ *******************************************************************************
+ *
+ *   \brief Null Source IPC link de-register and de-init function
+ *
+ *          For each IPC instance
+ *          - Deletes link task
+ *          - De-registers as a link with the system API
+ *
+ *   \return  SYSTEM_LINK_STATUS_SOK on success
+ *
+ *******************************************************************************
+*/
+Int32 NullSrcIpcOutLink_deInit(void);
+
+/**
+ *******************************************************************************
+ *
+ *   \brief IPC In Null link register and init function
+ *
+ *          For each IPC instance
+ *          - Creates link task
+ *          - Registers as a link with the system API
+ *
+ *   \return  SYSTEM_LINK_STATUS_SOK on success
+ *
+ *******************************************************************************
+*/
+Int32 IpcInNullLink_init(void);
+
+/**
+ *******************************************************************************
+ *
+ *   \brief IPC In Null link de-register and de-init function
+ *
+ *          For each IPC instance
+ *          - Deletes link task
+ *          - De-registers as a link with the system API
+ *
+ *   \return  SYSTEM_LINK_STATUS_SOK on success
+ *
+ *******************************************************************************
+*/
+Int32 IpcInNullLink_deInit(void);
+
+/**
+ *******************************************************************************
+ *
  *   \brief Function to initialize the IPC Link Create Params
  *
  *          Sets default values for IPC link create time parameters

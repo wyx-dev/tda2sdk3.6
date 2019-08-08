@@ -82,10 +82,19 @@ Int32 AlgorithmLink_tskCreate(UInt32 instId)
     Int32                status;
     AlgorithmLink_Obj       *pObj;
     Utils_TskMultiMbxHndl *pMultiMbxHndl;
+    UInt32 procId = System_getSelfProcId();
+    UInt32 tskMultiMbxPri = UTILS_TASK_MULTI_MBX_PRI_LOWEST;
+    UInt32 algLinkId = SYSTEM_LINK_ID_ALG_0 + instId;
 
     pObj = &gAlgorithmLink_obj[instId];
 
     pMultiMbxHndl = System_getTskMultiMbxHndl();
+
+    if(((SYSTEM_PROC_DSP1 == procId) || (SYSTEM_PROC_DSP2 == procId)) &&
+       ((SYSTEM_LINK_ID_ALG_3 == algLinkId) || (SYSTEM_LINK_ID_ALG_4 == algLinkId)))
+    {
+        tskMultiMbxPri = UTILS_TASK_MULTI_MBX_PRI_HIGHEST;
+    }
 
     /*
      * Create link task, task remains in IDLE state.
@@ -94,7 +103,7 @@ Int32 AlgorithmLink_tskCreate(UInt32 instId)
     status = Utils_tskMultiMbxCreate(&pObj->tsk,
                              pMultiMbxHndl,
                              AlgorithmLink_tskMain,
-                             UTILS_TASK_MULTI_MBX_PRI_LOWEST,
+                             tskMultiMbxPri,
                              pObj, UTILS_TSK_AFFINITY_CORE0);
     UTILS_assert(status == SYSTEM_LINK_STATUS_SOK);
 

@@ -101,7 +101,7 @@ extern "C" {
  * \brief Max possible IPC OUT link instances on a given CPU
  *******************************************************************************
  */
-#define SYSTEM_IPC_OUT_LINK_MAX     (10U)
+#define SYSTEM_IPC_OUT_LINK_MAX     (26U)
 
 /**
  *******************************************************************************

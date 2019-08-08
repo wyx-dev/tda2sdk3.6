@@ -78,6 +78,7 @@ Limited License.
  */
 
 #include "systemLink_priv_ipu1.h"
+#include <src/rtos/utils_common/include/utils_cbuf_ocmc.h>
 
 /**
  *******************************************************************************
@@ -229,7 +230,13 @@ static Int32 SystemLink_cmdHandler(SystemLink_Obj * pObj, UInt32 cmd, Void * pPr
             System_printDisplayErrorStats();
         #endif
             break;
-
+        case SYSTEM_COMMON_CMD_OCMC_RAMS_INIT:
+        {
+            Vps_printf("Init OCMC RAMS from non-rtos context.");
+            Utils_cbufOcmcInit(UTILS_OCMC_RAM1);
+            Utils_cbufOcmcInit(UTILS_OCMC_RAM2);
+            Utils_cbufOcmcInit(UTILS_OCMC_RAM3);
+        }
         case 0xabcd0002:
         {
 		Vps_printf(">>>>>>> 0xabcd0002");

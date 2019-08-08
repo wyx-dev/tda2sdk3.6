@@ -83,8 +83,8 @@ Limited License.
  *******************************************************************************
  */
 
-#ifndef _IPC_IN_LINK_PRIV_H_
-#define _IPC_IN_LINK_PRIV_H_
+#ifndef _IPC_IN_NULL_LINK_PRIV_H_
+#define _IPC_IN_NULL_LINK_PRIV_H_
 
 /*******************************************************************************
  *  INCLUDE FILES
@@ -96,6 +96,8 @@ Limited License.
 #include <links_fw/src/hlos/osa/include/osa_prf.h>
 #include <links_fw/src/hlos/osa/include/osa_mutex.h>
 #include <links_fw/src/hlos/osa/include/osa_tsk.h>
+
+#define IPC_IN_NULL
 
 /*******************************************************************************
  *  Defines
@@ -120,14 +122,14 @@ Limited License.
  *******************************************************************************
  */
 
-#define IPC_IN_LINK_OBJ_MAX        (6)
+#define IPC_IN_NULL_LINK_OBJ_MAX        (20U)
 
 /**
  *******************************************************************************
  * \brief size of IPC_IN link thread stack
  *******************************************************************************
  */
-#define IPC_IN_LINK_TSK_STACK_SIZE (OSA_TSK_STACK_SIZE_DEFAULT)
+#define IPC_IN_NULL_LINK_TSK_STACK_SIZE (OSA_TSK_STACK_SIZE_DEFAULT)
 
 
 /*******************************************************************************
@@ -152,7 +154,7 @@ typedef struct {
     UInt64 maxNotifyLatency; /**< in usecs */
     UInt64 minNotifyLatency; /**< in usecs */
 
-} IpcInLink_LatencyStats;
+} IpcInNullLink_LatencyStats;
 
 
 /**
@@ -223,49 +225,52 @@ typedef struct {
      *   to start stats counting
      */
 
-    IpcInLink_LatencyStats ipcLatencyStats;
+    IpcInNullLink_LatencyStats ipcLatencyStats;
     /**< IPC specific latency stats */
 
-} IpcInLink_obj;
+} IpcInNullLink_obj;
 
-extern IpcInLink_obj gIpcInLink_obj[];
+extern IpcInNullLink_obj gIpcInNullLink_obj[];
 
 /*******************************************************************************
  *  Functions
  *******************************************************************************
  */
+int IpcInNullLink_GetBuffer(unsigned int eveId, void** pInBuffer, unsigned int timeout);
 
-Int32 IpcInLink_drvProcessBuffers(IpcInLink_obj *pObj);
+int IpcInNullLink_FreeBuffer(unsigned int eveId, void* pInBuffer);
 
-Int32 IpcInLink_drvStop(IpcInLink_obj *pObj);
+Int32 IpcInNullLink_drvProcessBuffers(IpcInNullLink_obj *pObj);
 
-Int32 IpcInLink_drvPrintStatistics(IpcInLink_obj *pObj);
+Int32 IpcInNullLink_drvStop(IpcInNullLink_obj *pObj);
 
-Int32 IpcInLink_drvCreate(IpcInLink_obj *pObj, IpcLink_CreateParams *pPrm);
+Int32 IpcInNullLink_drvPrintStatistics(IpcInNullLink_obj *pObj);
 
-Int32 IpcInLink_drvDelete(IpcInLink_obj *pObj);
+Int32 IpcInNullLink_drvCreate(IpcInNullLink_obj *pObj, IpcLink_CreateParams *pPrm);
 
-Int32 IpcInLink_getLinkInfo(Void *pTsk, System_LinkInfo *info);
+Int32 IpcInNullLink_drvDelete(IpcInNullLink_obj *pObj);
 
-Int32 IpcInLink_drvPutEmptyBuffers(IpcInLink_obj *pObj,
+Int32 IpcInNullLink_getLinkInfo(Void *pTsk, System_LinkInfo *info);
+
+Int32 IpcInNullLink_drvPutEmptyBuffers(IpcInNullLink_obj *pObj,
                                     System_BufferList *pBufList);
 
-Int32 IpcInLink_drvGetFullBuffers(IpcInLink_obj *pObj,
+Int32 IpcInNullLink_drvGetFullBuffers(IpcInNullLink_obj *pObj,
                                     System_BufferList *pBufList);
 
-Int32 IpcInLink_drvPrdStart(IpcInLink_obj *pObj);
+Int32 IpcInNullLink_drvPrdStart(IpcInNullLink_obj *pObj);
 
-Int32 IpcInLink_drvPrdStop(IpcInLink_obj *pObj);
+Int32 IpcInNullLink_drvPrdStop(IpcInNullLink_obj *pObj);
 
-Void  IpcInLink_drvNotifyCb(OSA_TskHndl * pTsk);
+Void  IpcInNullLink_drvNotifyCb(OSA_TskHndl * pTsk);
 
-Void IpcInLink_latencyStatsReset(IpcInLink_obj *pObj);
+Void IpcInNullLink_latencyStatsReset(IpcInNullLink_obj *pObj);
 
-Void IpcInLink_latencyStatsUpdate(IpcInLink_obj *pObj,
+Void IpcInNullLink_latencyStatsUpdate(IpcInNullLink_obj *pObj,
                                 UInt64 ipcLatency,
                                 UInt64 notifyLatency );
 
-Void IpcInLink_latencyStatsPrint(IpcInLink_obj *pObj, Bool resetStats);
+Void IpcInNullLink_latencyStatsPrint(IpcInNullLink_obj *pObj, Bool resetStats);
 
 #endif
 

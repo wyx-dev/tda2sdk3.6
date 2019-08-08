@@ -1,5 +1,4 @@
-# File: linksfw_component.mk
-#       This file is component include make file of links framework libraries.
+# File: component.mk
 # List of variables set in this file and their purpose:
 # <mod>_RELPATH        - This is the relative path of the module, typically from
 #                        top-level directory of the package
@@ -33,36 +32,19 @@
 #                             to be compiled in the application build stage.
 #
 
-SOC_LIST_ALL = tda2xx tda2px tda2ex
-CORE_LIST_ALL = a15_0
+MODNAME = links_a15_ipcInNull
+linksfw_LIB_LIST += links_a15_ipcInNull
+$(MODNAME)_PATH = $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/ipcInNull
 
-# List of the linksfw libs to build
-linksfw_LIB_LIST =
+$(MODNAME)_BOARD_DEPENDENCY = yes
+$(MODNAME)_CORE_DEPENDENCY = yes
+$(MODNAME)_PLATFORM_DEPENDENCY = yes
+$(MODNAME)_SOCLIST = tda2xx tda2px tda2ex
+$(MODNAME)_$(SOC)_CORELIST = a15_0
 
-# include all the components present
-ifeq ($(BUILD_INFOADAS),yes)
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/ep/component.mk
-endif
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/algorithm/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/dup/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/gate/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/ipcIn/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/ipcOut/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/merge/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/nullSrc/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/null/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/select/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/sgxFrmcpy/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/sync/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/dispDistSrc/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/utils/multiproc/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/utils/network/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/system/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/osa/src/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/ipcInNull/component.mk
--include $(vision_sdk_PATH)/links_fw/src/hlos/links_a15/nullSrcIpcOut/component.mk
-
-
-export linksfw_LIB_LIST
-export SOC_LIST_ALL
-export CORE_LIST_ALL
+export $(MODNAME)_SOCLIST
+export $(MODNAME)_$(SOC)_CORELIST
+export $(MODNAME)_BOARD_DEPENDENCY
+export $(MODNAME)_CORE_DEPENDENCY
+export $(MODNAME)_PLATFORM_DEPENDENCY
+export $(MODNAME)_PATH

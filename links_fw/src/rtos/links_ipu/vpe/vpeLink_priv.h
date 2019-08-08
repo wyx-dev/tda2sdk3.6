@@ -126,7 +126,7 @@ extern "C" {
  *
  *******************************************************************************
  */
-#define VPE_LINK_MAX_OUT_FRAMES_PER_CH       (10U)
+#define VPE_LINK_MAX_OUT_FRAMES_PER_CH       (50U)
 
 #define VPE_MAX_DROP_BUFFER_WIDTH            (1920U)
 #define VPE_MAX_DROP_BUFFER_HEIGHT           (1080U)

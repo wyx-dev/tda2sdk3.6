@@ -86,14 +86,14 @@ Limited License.
  *  INCLUDE FILES
  *******************************************************************************
  */
-#include "ipcOutLink_priv.h"
+#include "nullSrcIpcOutLink_priv.h"
 
 /**
  *******************************************************************************
  * \brief Link object, stores all link related information
  *******************************************************************************
  */
-IpcOutLink_Obj gIpcOutLink_obj[IPC_OUT_LINK_OBJ_MAX];
+NullSrcIpcOutLink_Obj gNullSrcIpcOutLink_obj[NULL_SRC_IPC_OUT_LINK_OBJ_MAX];
 
 
 /**
@@ -108,11 +108,11 @@ IpcOutLink_Obj gIpcOutLink_obj[IPC_OUT_LINK_OBJ_MAX];
  *
  *******************************************************************************
  */
-Int32 IpcOutLink_getLinkInfo(Void *pTsk,
+Int32 NullSrcIpcOutLink_getLinkInfo(Void *pTsk,
                              System_LinkInfo *info)
 {
     OSA_TskHndl * pTskHndl = (OSA_TskHndl *)pTsk;
-    IpcOutLink_Obj * pObj = (IpcOutLink_Obj * )pTskHndl->appData;
+    NullSrcIpcOutLink_Obj * pObj = (NullSrcIpcOutLink_Obj * )pTskHndl->appData;
 
     /* 'info' structure is set with valid values during 'create' phase
      * Simply pass on previous link info to next link
@@ -139,7 +139,7 @@ Int32 IpcOutLink_getLinkInfo(Void *pTsk,
  *
  *******************************************************************************
  */
-Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
+Int32 NullSrcIpcOutLink_tskRun(NullSrcIpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
 {
     Int32          status  = SYSTEM_LINK_STATUS_SOK;
     Bool           runDone = FALSE, stopDone = FALSE;
@@ -176,18 +176,18 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
                 if(!stopDone)
                 {
                     /* if STOP state then dont handle buffers */
-                    status  = IpcOutLink_drvProcessBuffers(pObj);
+                    status  = NullSrcIpcOutLink_drvProcessBuffers(pObj);
                 }
                 break;
 
-            case IPC_OUT_LINK_CMD_RELEASE_FRAMES:
+            case NULL_SRC_IPC_OUT_LINK_CMD_RELEASE_FRAMES:
 
                 OSA_tskAckOrFreeMsg(pRunMsg, status);
 
                 if(!stopDone)
                 {
                     /* if STOP state then dont handle buffers */
-                    status = IpcOutLink_drvReleaseBuffers(pObj);
+                    status = NullSrcIpcOutLink_drvReleaseBuffers(pObj);
                 }
                 break;
 
@@ -195,7 +195,7 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
 
                 if(!stopDone)
                 {
-                    status = IpcOutLink_drvStop(pObj);
+                    status = NullSrcIpcOutLink_drvStop(pObj);
 
                     stopDone = TRUE;
                 }
@@ -206,7 +206,7 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
 
             case IPC_OUT_LINK_CMD_SET_FRAME_RATE:
 
-                status = IpcOutLink_drvSetFrameRate(
+                status = NullSrcIpcOutLink_drvSetFrameRate(
                                         pObj,
                                         OSA_msgGetPrm(pRunMsg));
 
@@ -215,7 +215,7 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
 
             case SYSTEM_CMD_PRINT_STATISTICS:
 
-                status = IpcOutLink_drvPrintStatistics(pObj);
+                status = NullSrcIpcOutLink_drvPrintStatistics(pObj);
 
                 OSA_tskAckOrFreeMsg(pRunMsg, status);
                 break;
@@ -224,10 +224,10 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
 
                 if(!stopDone)
                 {
-                    status = IpcOutLink_drvStop(pObj);
+                    status = NullSrcIpcOutLink_drvStop(pObj);
                 }
 
-                status |= IpcOutLink_drvDelete(pObj);
+                status |= NullSrcIpcOutLink_drvDelete(pObj);
 
                 OSA_tskAckOrFreeMsg(pRunMsg, status);
 
@@ -242,10 +242,6 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
                 OSA_tskAckOrFreeMsg(pRunMsg, status);
                 break;
 
-            case SYSTEM_CMD_USER0:
-                Vps_printf("ipcOut LINK:  get param: %d\n", *(UInt8*)pRunMsg->pPrm);
-                OSA_tskAckOrFreeMsg(pRunMsg, status);
-                break;
             /*
              * Invalid command for this state.  ACK it and continue RUN
              */
@@ -271,13 +267,13 @@ Int32 IpcOutLink_tskRun(IpcOutLink_Obj * pObj, OSA_TskHndl * pTsk)
  *
  *******************************************************************************
  */
-Int32 IpcOutLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 curState)
+Int32 NullSrcIpcOutLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 curState)
 {
     UInt32               cmd = OSA_msgGetCmd(pMsg);
     Int32                status;
-    IpcOutLink_Obj      *pObj;
+    NullSrcIpcOutLink_Obj      *pObj;
 
-    pObj = (IpcOutLink_Obj *) pTsk->appData;
+    pObj = (NullSrcIpcOutLink_Obj *) pTsk->appData;
 
     /*
      * At this stage only create command is the expected command.
@@ -292,7 +288,7 @@ Int32 IpcOutLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 c
     /*
      * Create command received, create the IPC related data structure's
      */
-    status = IpcOutLink_drvCreate(pObj, OSA_msgGetPrm(pMsg));
+    status = NullSrcIpcOutLink_drvCreate(pObj, OSA_msgGetPrm(pMsg));
 
     OSA_tskAckOrFreeMsg(pMsg, status);
 
@@ -305,7 +301,7 @@ Int32 IpcOutLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 c
     /*
      * Entering RUN state
      */
-    status = IpcOutLink_tskRun(pObj, pTsk);
+    status = NullSrcIpcOutLink_tskRun(pObj, pTsk);
 
     /*
      * Entering IDLE state
@@ -323,23 +319,24 @@ Int32 IpcOutLink_tskMain(struct OSA_TskHndl * pTsk, OSA_MsgHndl * pMsg, UInt32 c
  *
  *******************************************************************************
 */
-Int32 IpcOutLink_init(void)
+Int32 NullSrcIpcOutLink_init(void)
 {
     Int32                status;
     UInt32               instId;
     System_LinkObj       linkObj;
-    IpcOutLink_Obj      *pObj;
+    NullSrcIpcOutLink_Obj      *pObj;
     UInt32               procId = System_getSelfProcId();
+    int                  index = 0;
 
-    for(instId = 0; instId < IPC_OUT_LINK_OBJ_MAX; instId++ )
+    for(instId = 0; instId < NULL_SRC_IPC_OUT_LINK_OBJ_MAX; instId++ )
     {
-        pObj = &gIpcOutLink_obj[instId];
+        pObj = &gNullSrcIpcOutLink_obj[instId];
 
         memset(pObj, 0, sizeof(*pObj));
 
         pObj->linkId =
             SYSTEM_MAKE_LINK_ID(procId,
-                                SYSTEM_LINK_ID_IPC_OUT_0) + instId;
+                                SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_0) + instId;
 
         pObj->linkInstId = instId;
 
@@ -348,12 +345,12 @@ Int32 IpcOutLink_init(void)
         linkObj.pTsk = &pObj->tsk;
         linkObj.linkGetFullBuffers  = NULL;
         linkObj.linkPutEmptyBuffers = NULL;
-        linkObj.getLinkInfo         = IpcOutLink_getLinkInfo;
+        linkObj.getLinkInfo         = NullSrcIpcOutLink_getLinkInfo;
 
         System_registerLink(pObj->linkId, &linkObj);
 
         /* register notify handler with system framework */
-        System_ipcRegisterNotifyCb(pObj->linkId, IpcOutLink_drvNotifyCb);
+        System_ipcRegisterNotifyCb(pObj->linkId, NullSrcIpcOutLink_drvNotifyCb);
 
 
         /* allocate shared memory for IPC queue */
@@ -382,16 +379,24 @@ Int32 IpcOutLink_init(void)
                             sizeof(UInt32)
                         );
         OSA_assert(status==SYSTEM_LINK_STATUS_SOK);
+        
+        status = OSA_bufCreate(&pObj->inBufQue, TRUE, FALSE);
+        OSA_assert(status == SYSTEM_LINK_STATUS_SOK);
+
+        for (index = 0; index < NULL_SRC_IPC_OUT_LINK_MAX_IN_BUFS_PER_CH; index++)
+        {
+            OSA_bufPutEmptyBuffer(&pObj->inBufQue, &pObj->buffers[instId][index]);
+        }
 
         /*
          * Create link task, task remains in IDLE state.
          * ipcOutLink_tskMain is called when a message command is received.
          */
-        snprintf(pObj->tskName, 32, "IPC_OUT_%u", (unsigned int)instId);
+        snprintf(pObj->tskName, 32, "NULL_SRC_IPC_OUT_%u", (unsigned int)instId);
         status = OSA_tskCreate(&pObj->tsk,
-                               IpcOutLink_tskMain,
+                               NullSrcIpcOutLink_tskMain,
                                IPC_LINK_TSK_PRI,
-                               IPC_OUT_LINK_TSK_STACK_SIZE,
+                               NULL_SRC_IPC_OUT_LINK_TSK_STACK_SIZE,
                                0,
                                pObj,
                                pObj->tskName);
@@ -412,14 +417,14 @@ Int32 IpcOutLink_init(void)
  *
  *******************************************************************************
 */
-Int32 IpcOutLink_deInit(void)
+Int32 NullSrcIpcOutLink_deInit(void)
 {
-    IpcOutLink_Obj *pObj;
+    NullSrcIpcOutLink_Obj *pObj;
     UInt32 instId;
 
-    for(instId = 0; instId<IPC_OUT_LINK_OBJ_MAX; instId++ )
+    for(instId = 0; instId<NULL_SRC_IPC_OUT_LINK_OBJ_MAX; instId++ )
     {
-        pObj = &gIpcOutLink_obj[instId];
+        pObj = &gNullSrcIpcOutLink_obj[instId];
 
         OSA_tskDelete(&pObj->tsk);
 
@@ -432,3 +437,27 @@ Int32 IpcOutLink_deInit(void)
 
     return SYSTEM_LINK_STATUS_SOK;
 }
+
+/**
+ *******************************************************************************
+ *
+ * \brief Handle input buffer.
+ *
+ * \return  SYSTEM_LINK_STATUS_SOK on success
+ *
+ *******************************************************************************
+*/
+Int32 NullSrcIpcOutLink_PutBuffer(UInt32 eveId, void* pInBuffer)
+{
+    Int32 status = 0;
+    NullSrcIpcOutLink_Obj *pObj = NULL;
+
+    pObj = &gNullSrcIpcOutLink_obj[eveId];
+
+    status = NullSrcIpcOutLink_ProcessBuffers(pObj, pInBuffer);
+
+    pObj->linkStats.notifyEventCount++;
+
+    return status;
+}
+

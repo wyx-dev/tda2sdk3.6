@@ -450,6 +450,8 @@ Void System_initLinks(void)
 
     IpcOutLink_init();
     IpcInLink_init();
+    NullSrcIpcOutLink_init();
+    IpcInNullLink_init();
     NullLink_init();
     NullSrcLink_init();
     DispDistSrcLink_init();

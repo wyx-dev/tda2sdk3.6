@@ -101,7 +101,7 @@ extern "C" {
  *
  *******************************************************************************
  */
-#define SYSTEM_LINK_ID_MAX                  (128U)
+#define SYSTEM_LINK_ID_MAX                  (132U)
 
 /**
  *******************************************************************************
@@ -550,271 +550,399 @@ typedef enum
     /**< IPC Output Link Id  - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_OUT_6 = 6,
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_0 = 6,
     /**< IPC Output Link Id  - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_OUT_7 = 7,
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_1 = 7,
     /**< IPC Output Link Id  - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_OUT_8 = 8,
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_2 = 8,
     /**< IPC Output Link Id  - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_OUT_9 = 9,
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_3 = 9,
     /**< IPC Output Link Id  - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_0 = 10,
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_4 = 10,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_5 = 11,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_6 = 12,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_7 = 13,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_8 = 14,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_9 = 15,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_10 = 16,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_11 = 17,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_12 = 18,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_13 = 19,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_14 = 20,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_15 = 21,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_16 = 22,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_17 = 23,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_18 = 24,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_SRC_IPC_OUT_19 = 25,
+    /**< IPC Output Link Id  - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_0 = 26,
     /**< IPC Input Link Id - used to xfr data across
       *  processors */
 
-    SYSTEM_LINK_ID_IPC_IN_1 = 11,
+    SYSTEM_LINK_ID_IPC_IN_1 = 27,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_2 = 12,
+    SYSTEM_LINK_ID_IPC_IN_2 = 28,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_3 = 13,
+    SYSTEM_LINK_ID_IPC_IN_3 = 29,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_4 = 14,
+    SYSTEM_LINK_ID_IPC_IN_4 = 30,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_5 = 15,
+    SYSTEM_LINK_ID_IPC_IN_5 = 31,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_6 = 16,
+    SYSTEM_LINK_ID_IPC_IN_NULL_0 = 32,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_7 = 17,
+    SYSTEM_LINK_ID_IPC_IN_NULL_1 = 33,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_8 = 18,
+    SYSTEM_LINK_ID_IPC_IN_NULL_2 = 34,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_IPC_IN_9 = 19,
+    SYSTEM_LINK_ID_IPC_IN_NULL_3 = 35,
     /**< IPC Input Link Id - used to xfr data across
      *   processors */
 
-    SYSTEM_LINK_ID_NULL_0 = 20,
+    SYSTEM_LINK_ID_IPC_IN_NULL_4 = 36,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_5 = 37,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_6 = 38,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_7 = 39,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_8 = 40,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_9 = 41,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_10 = 42,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_11 = 43,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_12 = 44,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_13 = 45,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_14 = 46,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_15 = 47,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_16 = 48,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_17 = 49,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_18 = 50,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_IPC_IN_NULL_19 = 51,
+    /**< IPC Input Link Id - used to xfr data across
+     *   processors */
+
+    SYSTEM_LINK_ID_NULL_0 = 52,
     /**< Null Link - Can be used as a tap point to verify various
      *   sub-chains. Doesnt do any processing : 4*/
 
-    SYSTEM_LINK_ID_NULL_1 = 21,
+    SYSTEM_LINK_ID_NULL_1 = 53,
     /**< Null Link - Can be used as a tap point to verify various
      *   sub-chains. Doesnt do any processing : 5*/
 
-    SYSTEM_LINK_ID_NULL_2 = 22,
+    SYSTEM_LINK_ID_NULL_2 = 54,
     /**< Null Link - Can be used as a tap point to verify various
      *   sub-chains. Doesnt do any processing : 5*/
 
-    SYSTEM_LINK_ID_GRPX_SRC_0 = 23,
+    SYSTEM_LINK_ID_GRPX_SRC_0 = 55,
     /**< Null source link - can be used as a source link providing
      *   dummy data */
 
-    SYSTEM_LINK_ID_GRPX_SRC_1 = 24,
+    SYSTEM_LINK_ID_GRPX_SRC_1 = 56,
     /**< Null source link - can be used as a source link providing
      *   dummy data */
 
-    SYSTEM_LINK_ID_DUP_0 = 25,
+    SYSTEM_LINK_ID_DUP_0 = 57,
     /**< Dup Link - Duplicate frames and provides multiple outputs */
 
-    SYSTEM_LINK_ID_DUP_1 = 26,
+    SYSTEM_LINK_ID_DUP_1 = 58,
     /**< Dup Link - Duplicate frames and provides multiple outputs */
 
-    SYSTEM_LINK_ID_DUP_2 = 27,
+    SYSTEM_LINK_ID_DUP_2 = 59,
     /**< Dup Link - Duplicate frames and provides multiple outputs */
 
-    SYSTEM_LINK_ID_DUP_3 = 28,
+    SYSTEM_LINK_ID_DUP_3 = 60,
     /**< Dup Link - Duplicate frames and provides multiple outputs */
 
-    SYSTEM_LINK_ID_DUP_4 = 29,
+    SYSTEM_LINK_ID_DUP_4 = 61,
     /**< Dup Link - Duplicate frames and provides multiple outputs */
 
-    SYSTEM_LINK_ID_GATE_0 = 30,
+    SYSTEM_LINK_ID_GATE_0 = 62,
     /**< Gate Link - Acts a on/off switch and allows partial data
          flow to exist */
 
-    SYSTEM_LINK_ID_GATE_1 = 31,
+    SYSTEM_LINK_ID_GATE_1 = 63,
     /**< Gate Link - Acts a on/off switch and allows partial data
          flow to exist */
 
-    SYSTEM_LINK_ID_GATE_2 = 32,
+    SYSTEM_LINK_ID_GATE_2 = 64,
     /**< Gate Link - Acts a on/off switch and allows partial data
          flow to exist */
 
-    SYSTEM_LINK_ID_GATE_3 = 33,
+    SYSTEM_LINK_ID_GATE_3 = 65,
     /**< Gate Link - Acts a on/off switch and allows partial data
          flow to exist */
 
-    SYSTEM_LINK_ID_SYNC_0 = 34,
+    SYSTEM_LINK_ID_SYNC_0 = 66,
     /**< Sync Link - creates a composite frame by composing multiple incoming
          Frames */
 
-    SYSTEM_LINK_ID_SYNC_1 = 35,
+    SYSTEM_LINK_ID_SYNC_1 = 67,
     /**< Sync Link - creates a composite frame by composing multiple incoming
          Frames */
 
-    SYSTEM_LINK_ID_SYNC_2 = 36,
+    SYSTEM_LINK_ID_SYNC_2 = 68,
     /**< Sync Link - creates a composite frame by composing multiple incoming
          Frames */
 
-    SYSTEM_LINK_ID_SYNC_3 = 37,
+    SYSTEM_LINK_ID_SYNC_3 = 69,
     /**< Sync Link - creates a composite frame by composing multiple incoming
          Frames */
 
-    SYSTEM_LINK_ID_MERGE_0 = 38,
+    SYSTEM_LINK_ID_MERGE_0 = 70,
     /**< Merge Link - Merge different input queue frames & provide them as
      *   single output source. Channel numbering is sequential wrt to
      *   input queues */
 
-    SYSTEM_LINK_ID_MERGE_1 = 39,
+    SYSTEM_LINK_ID_MERGE_1 = 71,
     /**< Merge Link - Merge different input queue frames & provide them as
      *   single output source. Channel numbering is sequential wrt to
      *   input queues */
 
-    SYSTEM_LINK_ID_MERGE_2 = 40,
+    SYSTEM_LINK_ID_MERGE_2 = 72,
     /**< Merge Link - Merge different input queue frames & provide them as
      *   single output source. Channel numbering is sequential wrt to
      *   input queues */
 
-    SYSTEM_LINK_ID_MERGE_3 = 41,
+    SYSTEM_LINK_ID_MERGE_3 = 73,
     /**< Merge Link - Merge different input queue frames & provide them as
      *   single output source. Channel numbering is sequential wrt to
      *   input queues */
 
-    SYSTEM_LINK_ID_MERGE_4 = 42,
+    SYSTEM_LINK_ID_MERGE_4 = 74,
     /**< Merge Link - Merge different input queue frames & provide them as
      *   single output source. Channel numbering is sequential wrt to
      *   input queues */
 
 
-    SYSTEM_LINK_ID_SELECT_0 = 43,
+    SYSTEM_LINK_ID_SELECT_0 = 75,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_SELECT_1 = 44,
+    SYSTEM_LINK_ID_SELECT_1 = 76,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_SELECT_2 = 45,
+    SYSTEM_LINK_ID_SELECT_2 = 77,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_SELECT_3 = 46,
+    SYSTEM_LINK_ID_SELECT_3 = 78,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_SELECT_4 = 47,
+    SYSTEM_LINK_ID_SELECT_4 = 79,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_SELECT_5 = 48,
+    SYSTEM_LINK_ID_SELECT_5 = 80,
     /**< Select Link enables configurable mapping of specific channels
      *   to be sent out in multiple queues */
 
-    SYSTEM_LINK_ID_ALG_0 = 49,
+    SYSTEM_LINK_ID_ALG_0 = 81,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_1 = 50,
+    SYSTEM_LINK_ID_ALG_1 = 82,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_2 = 51,
+    SYSTEM_LINK_ID_ALG_2 = 83,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_3 = 52,
+    SYSTEM_LINK_ID_ALG_3 = 84,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_4 = 53,
+    SYSTEM_LINK_ID_ALG_4 = 85,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_5 = 54,
+    SYSTEM_LINK_ID_ALG_5 = 86,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_6 = 55,
+    SYSTEM_LINK_ID_ALG_6 = 87,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_ALG_7 = 56,
+    SYSTEM_LINK_ID_ALG_7 = 88,
     /**< Algorithm link Id */
 
-    SYSTEM_LINK_ID_NULL_SRC_0 = 57,
+    SYSTEM_LINK_ID_NULL_SRC_0 = 89,
     /**< Null source link - can be used as a source link providing
      *   dummy data */
 
-    SYSTEM_LINK_ID_AVB_RX = 58,
+    SYSTEM_LINK_ID_AVB_RX = 90,
     /**< AvbRx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_RTI_0 = 59,
+    SYSTEM_LINK_ID_RTI_0 = 91,
     /* RTI link - only on TDA3x, on all cores except EVE/M4_1 */
 
-    SYSTEM_LINK_ID_TFDTP_RX = 60,
+    SYSTEM_LINK_ID_TFDTP_RX = 92,
     /**< TFDTP Rx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_LIDAR_GPC = 61,
+    SYSTEM_LINK_ID_LIDAR_GPC = 93,
     /* Lidar Ground Point Classification algorithm, runs on dsp1, dsp2, ipu1_0, ipu1_1, and a15_0 */
 
-    SYSTEM_LINK_ID_AVB_TX_0 = 62,
+    SYSTEM_LINK_ID_AVB_TX_0 = 94,
     /**< AvbTx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_NETWORK_TX_0 = 63,
+    SYSTEM_LINK_ID_NETWORK_TX_0 = 95,
     /**< Network Tx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_NETWORK_TX_1 = 64,
+    SYSTEM_LINK_ID_NETWORK_TX_1 = 96,
     /**< Network Tx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_NETWORK_TX_2 = 65,
+    SYSTEM_LINK_ID_NETWORK_TX_2 = 97,
     /**< Network Tx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-    SYSTEM_LINK_ID_NETWORK_RX_0 = 66,
+    SYSTEM_LINK_ID_NETWORK_RX_0 = 98,
     /**< Network Rx link Id - can be used for supported CPUs only.
      *
      *   Supported CPUs: ipu1_0, ipu1_1, a15_0 in TDA2xx
      *   Supported CPUs: ipu1_0, ipu1_1        in TDA3xx
      */
 
-     SYSTEM_LINK_ID_AUTOSAR_IPC_IN_0 = 67,
+     SYSTEM_LINK_ID_AUTOSAR_IPC_IN_0 = 99,
      /**< Autosar IPC Input Link Id  - used to xfr data across
       *   processors */
 
-     SYSTEM_LINK_ID_AUTOSAR_IPC_OUT_0 = 68,
+     SYSTEM_LINK_ID_AUTOSAR_IPC_OUT_0 = 100,
      /**< Autosar IPC Output Link Id  - used to xfr data across
       *   processors */
 
-     SYSTEM_LINK_COMMON_LINKS_MAX_ID = 69
+     SYSTEM_LINK_COMMON_LINKS_MAX_ID = 101
     /**< Common Links - Max Id */
 
 } SYSTEM_LINK_IDS_COMMON;

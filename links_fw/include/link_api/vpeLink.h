@@ -165,7 +165,7 @@ extern "C" {
  *
  *******************************************************************************
 */
-#define VPE_LINK_NUM_BUFS_PER_CH_DEFAULT (4U)
+#define VPE_LINK_NUM_BUFS_PER_CH_DEFAULT (50U)
 
 /* @} */
 
