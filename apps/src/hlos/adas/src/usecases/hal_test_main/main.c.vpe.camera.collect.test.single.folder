@@ -131,7 +131,7 @@ static void* _cam_save_local_thread_func(void* ptr)
 
 			if(1 == channel_num)
 			{
-				sprintf(file_name, "%lld.%lld.bgr", (unsigned long long)frmdata.timestamp.tv_sec,(unsigned long long)frmdata.timestamp.tv_usec);
+				sprintf(file_name, "%lld.%06lld.bgr", (unsigned long long)frmdata.timestamp.tv_sec,(long long)frmdata.timestamp.tv_usec);
 				FILE* fp = fopen(file_name, "wb+");
 				if(fp)
 				{
@@ -139,7 +139,7 @@ static void* _cam_save_local_thread_func(void* ptr)
 					fflush(fp);
 					fclose(fp);
 				}
-				sprintf(time_data, "%lld.%lld\n", (unsigned long long)frmdata.timestamp.tv_sec,(unsigned long long)frmdata.timestamp.tv_usec);
+				sprintf(time_data, "%lld.%06lld\n", (unsigned long long)frmdata.timestamp.tv_sec,(long long)frmdata.timestamp.tv_usec);
 				fwrite(time_data, 1, strlen(time_data), ftimestamp);
 				fflush(ftimestamp);
 #if 0

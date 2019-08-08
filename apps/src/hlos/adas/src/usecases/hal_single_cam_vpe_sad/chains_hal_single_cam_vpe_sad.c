@@ -392,7 +392,6 @@ static int hal_single_cam_vpe_sad_get_timestamp(hal_frame_data_t *frmdata, UInt6
 	struct timeval time;
 	UInt64	a15Timestamp = 0;
 	UInt64	deltaTimestamp;
-	frmdata->hw_timestamp = m4_timestamp;
 
 	a15Timestamp = OSA_getCurGlobalTimeInUsec();
 	if(a15Timestamp < m4_timestamp){
@@ -464,6 +463,37 @@ Void hal_single_cam_vpe_sad_null_link_callback(System_LinkChInfo *pChInfo, Void 
             g_camera_save_local_obj.outVpeResizeColorCopyLen[ret];
 
         frmdata.resize_buf[ret] = pSysCompBuf->bufAddr[0][ret];
+        //TODO lizhihao@momenta.ai: temporary solution for image decode
+        if(ret == 0)
+        {
+            int j,k,l;
+            int bitcol = 20;
+            int bitrow = 1;
+            UInt64 timestamp = 0;
+            for(j=63;j>-1;j--)
+            {
+                int offset = j * bitcol;
+                UInt64 y_sum = 0;
+                for(k=0;k<bitcol;k++)
+                {
+                    for(l=0;l<bitrow;l++)
+                    {
+                        y_sum += frmdata.resize_buf[ret][offset+k+l*1280];
+                    }
+                }
+                y_sum /= bitcol*bitrow;
+                if(y_sum>127)
+                {
+                    timestamp = (timestamp << 1) + 1;
+                }
+                else
+                {
+                    timestamp = timestamp << 1;
+                }
+            }
+            timestamp >>= 8;
+            frmdata.hw_timestamp = timestamp;
+        }
     }
 
     /*call callback func*/
