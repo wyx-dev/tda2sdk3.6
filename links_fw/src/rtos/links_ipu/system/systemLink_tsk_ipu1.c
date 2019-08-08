@@ -230,6 +230,17 @@ static Int32 SystemLink_cmdHandler(SystemLink_Obj * pObj, UInt32 cmd, Void * pPr
         #endif
             break;
 
+        case 0xabcd0002:
+        {
+		Vps_printf(">>>>>>> 0xabcd0002");
+		ChainsCommon_StartCaptureDevice(
+			2, //CHAINS_CAPTURE_SRC_HDMI_1080P
+			1920,
+			1080
+			);
+        }
+            break;
+
         default:
             break;
     }

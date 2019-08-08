@@ -101,10 +101,10 @@ Limited License.
 #include <src/hlos/system/system_gbm_allocator.h>
 #include <src/include/chains_common_surround_view.h>
 
-#define CAPTURE_SENSOR_WIDTH      (1280)
-#define CAPTURE_SENSOR_HEIGHT     (720)
-#define LCD_DISPLAY_WIDTH         (800)
-#define LCD_DISPLAY_HEIGHT        (480)
+#define CAPTURE_SENSOR_WIDTH      (1920)
+#define CAPTURE_SENSOR_HEIGHT     (1080)
+#define LCD_DISPLAY_WIDTH         (1920)
+#define LCD_DISPLAY_HEIGHT        (1080)
 
 /**
  *******************************************************************************
@@ -254,15 +254,25 @@ Void chains_vipSingleCam_SgxDisplay_StartApp(chains_vipSingleCam_SgxDisplayAppOb
     ChainsCommon_memPrintHeapStatus();
 
 
-    pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_OV10635;
+    pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_1080P;//CHAINS_CAPTURE_SRC_OV10635;
     pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
     pObj->vidSensorPrm.numLvdsCh = 1;
 
+#if 0
     System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
                                 APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START,
                                 &pObj->vidSensorPrm,
                                 sizeof(VideoSensorCreateAndStartAppPrm),
                                 TRUE);
+#endif
+
+#if 1
+    System_linkControl(SYSTEM_LINK_ID_IPU1_0,
+                                0xabcd0002,
+                                NULL,
+                                0,
+                                TRUE);
+#endif
 
     chains_vipSingleCam_SgxDisplay_Start(&pObj->ucObj);
 
@@ -293,11 +303,13 @@ Void chains_vipSingleCam_SgxDisplay_StopApp(chains_vipSingleCam_SgxDisplayAppObj
 
     ChainsCommon_StopDisplayCtrl();
 
+#if 0
     System_linkControl(SYSTEM_LINK_ID_APP_CTRL,
                         APP_CTRL_LINK_CMD_VIDEO_SENSOR_STOP_AND_DELETE,
                         &pObj->vidSensorPrm,
                         sizeof(VideoSensorCreateAndStartAppPrm),
                         TRUE);
+#endif
     ChainsCommon_prfLoadCalcEnable(FALSE, FALSE, FALSE);
 
 }
@@ -324,6 +336,9 @@ Void chains_vipSingleCam_SgxDisplay(Chains_Ctrl *chainsCfg)
     char ch;
     UInt32 done = FALSE;
     chains_vipSingleCam_SgxDisplayAppObj chainsObj;
+
+    chainsCfg->displayType = CHAINS_DISPLAY_TYPE_HDMI_1080P;
+    chainsCfg->captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
 
     chainsObj.chainsCfg = chainsCfg;
 
