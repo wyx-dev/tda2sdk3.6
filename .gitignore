@@ -1,0 +1,6 @@
+*.DEPEND
+binaries/
+links_fw/include/config/
+links_fw/src/rtos/utils_common/src/eveloader/utils_eve_firmware.h
+
+
