@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
 
 int32_t MT_match_template_dsp(uint8_t img[],
                               uint32_t imgWidth,

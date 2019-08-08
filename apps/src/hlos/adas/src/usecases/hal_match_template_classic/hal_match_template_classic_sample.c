@@ -156,6 +156,7 @@ int hal_match_template_classic_run(void)
     para->pre_image = (uint8_t*)hal_match_template_classic_virt2phys((void*)mt_data[1]);
     para->cur_image = (uint8_t*)hal_match_template_classic_virt2phys((void*)(mt_data[1] + pitch*height*2));
     printf("mtc phy ******addr is:%x!\n",(unsigned int)para->pre_image);
+
     //set test case
     para->pad_num = 6;
 
@@ -172,12 +173,12 @@ int hal_match_template_classic_run(void)
     para->templ_pad[2].left = 750;
     para->templ_pad[2].top = 341;
     para->templ_pad[2].right = 798;
-    para->templ_pad[2].bottom = 380;
+    para->templ_pad[2].bottom = 441;
 
     para->templ_pad[3].left = 829;
-    para->templ_pad[3].top = 334;
+    para->templ_pad[3].top = 500;
     para->templ_pad[3].right = 953;
-    para->templ_pad[3].bottom = 422;
+    para->templ_pad[3].bottom = 720;
 
     para->templ_pad[4].left = 1018;
     para->templ_pad[4].top = 312;
@@ -194,20 +195,20 @@ int hal_match_template_classic_run(void)
     para->cur_pad[0].right = 550;
     para->cur_pad[0].bottom = 600;
 
-    para->cur_pad[1].left = 600;
-    para->cur_pad[1].top = 300;
-    para->cur_pad[1].right = 720;
-    para->cur_pad[1].bottom = 400;
+    para->cur_pad[1].left = 612;
+    para->cur_pad[1].top = 289;
+    para->cur_pad[1].right = 750;
+    para->cur_pad[1].bottom = 427;
 
-    para->cur_pad[2].left = 700;
-    para->cur_pad[2].top = 300;
-    para->cur_pad[2].right = 820;
-    para->cur_pad[2].bottom = 400;
+    para->cur_pad[2].left = 702;
+    para->cur_pad[2].top = 241;
+    para->cur_pad[2].right = 846;
+    para->cur_pad[2].bottom = 541;
 
     para->cur_pad[3].left = 800;
-    para->cur_pad[3].top = 300;
+    para->cur_pad[3].top = 500;
     para->cur_pad[3].right = 1000;
-    para->cur_pad[3].bottom = 450;
+    para->cur_pad[3].bottom = 900;
 
     para->cur_pad[4].left = 950;
     para->cur_pad[4].top = 280;
@@ -241,13 +242,13 @@ int hal_match_template_classic_run(void)
 
     hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0], mt_data[0]);
     hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0]);
-    hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0], mt_data[0]);
-    hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0]);
+    // hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0], mt_data[0]);
+    // hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0]);
 
-    hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0], mt_data[0]);
-    hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0]);
-    hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0], mt_data[0]);
-    hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0]);
+    // hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0], mt_data[0]);
+    // hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0]);
+    // hal_match_template_classic_put_input_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0], mt_data[0]);
+    // hal_match_template_classic_wait_output_buffer(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0]);
 
     hal_match_template_classic_deinit_thread_level(mtc_handle[HAL_MTC_PROC_ID_DSP1_INST0]);
     hal_match_template_classic_deinit_thread_level(mtc_handle[HAL_MTC_PROC_ID_DSP2_INST0]);

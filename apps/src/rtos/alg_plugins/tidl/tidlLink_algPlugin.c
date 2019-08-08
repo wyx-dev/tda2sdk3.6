@@ -493,7 +493,8 @@ static UInt32 tidlGetNumOutputBuffers(
                     BufDescList[numBuffs].bufPlanes[0].frameROI.height = net->TIDLLayers[i].outData[j].dimValues[2];
                     BufDescList[numBuffs].bufferId = net->TIDLLayers[i].outData[j].dataId;
 
-                    pAlgObj->outBufSize[numBuffs] = net->TIDLLayers[i].outData[j].pitch[0];
+                    pAlgObj->outBufSize[numBuffs] = \
+                        BufDescList[numBuffs].bufPlanes[0].width * BufDescList[numBuffs].bufPlanes[0].height;
 
                     numBuffs++;
                 }
@@ -724,10 +725,7 @@ Int32 AlgorithmLink_tidlCreate(void *pObj,void *pCreateParams)
                 pMetaDataBuffer->metaBufSize[0] += pAlgObj->outBufSize[buffCnt];
             }
 
-            if (index == 0)
-                pMetaDataBuffer->metaBufSize[0] = pMetaDataBuffer->metaBufSize[0] + OUTPUT_OFFSET_SIZE + (4 * TIDL_MAX_ALG_OUT_BUFS);
-            else
-                pMetaDataBuffer->metaBufSize[0] = pMetaDataBuffer->metaBufSize[0] + OUTPUT_OFFSET_SIZE;
+            pMetaDataBuffer->metaBufSize[0] = pMetaDataBuffer->metaBufSize[0] + OUTPUT_OFFSET_SIZE;
 
             pMetaDataBuffer->bufAddr[0] = Utils_memAlloc(
                                             UTILS_HEAPID_DDR_CACHED_SR,
@@ -814,9 +812,6 @@ Int32 AlgorithmLink_tidlDelete(void *pObj)
             index = (queId * TIDL_LINK_NUM_BUF_QUEUE) + bufIdx;
             pMetaDataBuffer = &pAlgObj->metaDataBuffers[index];
 
-            if (index == 0)
-                pMetaDataBuffer->bufAddr[0] = (void *)((char *)pMetaDataBuffer->bufAddr[0] - (4 * TIDL_MAX_ALG_OUT_BUFS));
-
             status = Utils_memFree(
                             UTILS_HEAPID_DDR_CACHED_SR,
                             pMetaDataBuffer->bufAddr[0],
@@ -874,6 +869,7 @@ Int32 AlgorithmLink_tidlProcess(void *pObj)
 
     if(pAlgObj->isFirstFrameRecv == FALSE)
     {
+        pAlgObj->isFirstFrameRecv = TRUE;
         Utils_resetLinkStatistics(&linkStatsInfo->linkStats, 1, 1);
         Utils_resetLatency(&linkStatsInfo->linkLatency);
         Utils_resetLatency(&linkStatsInfo->srcToLinkLatency);
@@ -962,13 +958,8 @@ Int32 AlgorithmLink_tidlProcess(void *pObj)
 
                     pSysBuffer = pAlgObj->outBufList[queId];
                     pMetaDataBuf = (System_MetaDataBuffer*)pSysBuffer->payload;
-
-                    if (pAlgObj->isFirstFrameRecv == FALSE)
-                    {
-                        memcpy(pMetaDataBuf->bufAddr[0], (void *)(pAlgObj->outBufSize), (4 * TIDL_MAX_ALG_OUT_BUFS));
-                        pMetaDataBuf->bufAddr[0] = (void *)((char *)pMetaDataBuf->bufAddr[0] + (4 * TIDL_MAX_ALG_OUT_BUFS));
-                    }
                     outBufAddr[queId] = (void *)((UInt32)pMetaDataBuf->bufAddr[0]);
+
                     /* 1st buff is the start address*/
                     pAlgObj->outBufDesc[0].bufPlanes[0].buf = outBufAddr[queId];
                     buffsize = 0;
@@ -993,10 +984,6 @@ Int32 AlgorithmLink_tidlProcess(void *pObj)
                 {
                     pMetaDataBuf = (System_MetaDataBuffer*)pSysBuffer->payload;
                     inBufAddr[queId] = pMetaDataBuf->bufAddr[0];
-                    if (pAlgObj->isFirstFrameRecv == FALSE)
-                    {
-                        memcpy((void *)pAlgObj->inBufSize, (void *)((UInt32)pMetaDataBuf->bufAddr[0] - (4 * TIDL_MAX_ALG_OUT_BUFS)), (4 * TIDL_MAX_ALG_OUT_BUFS));
-                    }
                 }
                 else if(SYSTEM_BUFFER_TYPE_VIDEO_FRAME == pSysBuffer->bufType)
                 {
@@ -1040,6 +1027,11 @@ Int32 AlgorithmLink_tidlProcess(void *pObj)
             if(SYSTEM_BUFFER_TYPE_METADATA == pSysBuffer->bufType)
             {
                 memcpy(&inArgs.dataQ[0],(Int32*)((Int32)(pMetaDataBuf->bufAddr[0]) + offsetSize),(OUTPUT_DATAQ_SIZE));
+            }
+            else if(SYSTEM_BUFFER_TYPE_VIDEO_FRAME == pSysBuffer->bufType)
+            {
+                buffsize += pAlgObj->inBufSize[pAlgObj->numInputBuffers-1];
+                memcpy(&inArgs.dataQ[0],(Int32*)((Int32)(pVidDataBuf->bufAddr[0]) + buffsize),(OUTPUT_DATAQ_SIZE));
             }
 #ifdef RT_DEBUG
 #ifdef BUILD_DSP
@@ -1147,10 +1139,7 @@ Int32 AlgorithmLink_tidlProcess(void *pObj)
             pAlgObj->numOutBufReceived = 0;
         }
     }
-    if (pAlgObj->isFirstFrameRecv == FALSE)
-    {
-        pAlgObj->isFirstFrameRecv = TRUE;
-    }
+
     return status;
 }
 

@@ -9,11 +9,11 @@
 #define ORIGIN_IMG_HEIGHT    (720)
 
 #define MAX_TEMPL_HIGHT    (64)
-#define MAX_CUR_TEMPL_SIZE_RATIO    (15)
+#define MAX_CUR_TEMPL_SIZE_RATIO    (9)
 #define CUR_IMG_WIDTH_ALIGN    (4)
 
 #define MAX_CUR_IMG_SIZE    (FIX_TEMPL_WIDTH*MAX_TEMPL_HIGHT*MAX_CUR_TEMPL_SIZE_RATIO)
-#define MAX_OUT_SCORE_SIZE  (FIX_TEMPL_WIDTH*4+1)*(MAX_TEMPL_HIGHT*2+1)
+#define MAX_OUT_SCORE_SIZE  (FIX_TEMPL_WIDTH*2+1)*(MAX_TEMPL_HIGHT*2+1)
 #define SCRACH_BUFFER_SIZE  (MAX_OUT_SCORE_SIZE*20+40)
 #define TOTAL_L2_BUFFER    (MAX_CUR_IMG_SIZE + MAX_OUT_SCORE_SIZE*sizeof(float) + FIX_TEMPL_WIDTH * MAX_TEMPL_HIGHT * 3)
 
@@ -37,6 +37,15 @@ typedef struct
   float right;
   float bottom;
 }Rect;
+
+
+typedef struct
+{
+  int left;
+  int top;
+  int right;
+  int bottom;
+}Rect_Int;
 
 typedef struct
 {

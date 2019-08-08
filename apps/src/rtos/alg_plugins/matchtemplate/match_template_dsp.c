@@ -50,9 +50,9 @@ int32_t MT_match_template_dsp(uint8_t img[],
 		}
 		VLIB_F32 tempImgVarF = (1.0f / sqrt(((VLIB_F32)tempImgVar) / (4.0 * 4.0)));
 
-//		if( tempImgVar <= FLT_MIN ) {
-//			tempImgVarF = FLT_MAX;
-//		}
+		if( tempImgVar <= FLT_MIN ) {
+			tempImgVarF = FLT_MAX;
+		}
 
         //printf("VLIB_matchTemplate begin\n");
 		// call VLIB_matchTemplate
