@@ -375,7 +375,7 @@ Void System_ipcMsgQTaskMain(UArg arg0, UArg arg1)
                         SYSTEM_LINK_ID_MAKE_NOTIFY_TYPE
                             (
                                 SYSTEM_GET_PROC_ID(pMsgCommon->linkId), /* destination CPU */
-                                SYSTEM_PROC_A15_0, /* source CPU */
+                                procId, /* source CPU */
                                 SYSTEM_LINK_ID_NOTIFY_TYPE_MSG /* ACK type */
                             )
                         );
