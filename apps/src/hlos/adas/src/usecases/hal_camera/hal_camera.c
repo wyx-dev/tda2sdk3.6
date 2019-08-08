@@ -47,29 +47,6 @@ extern pthread_mutex_t feed_mutex;
 #define HAL_DEBUG(args...) do { } while(0)
 #endif
 
-// static void _cam_hubing_get(hal_frame_data_t *frmdata)
-// {
-// 	int i = 0;
-// 	static int count_frame = 0;
-// 	char file_name[64] = {0};
-// 	int buffer_len[5]={1280*720*2,1280*720*3,512*224*2,384*224*3,384*224*3};
-// 	char *img_sufix[5]={"yuv","bgr","yuv","bgr","bgr"};
-// 	long long timeout = 0;
-// 	memset(file_name, 0, 64);
-// 	timeout = 1000000 * (long long)frmdata->timestamp.tv_sec + (long long)frmdata->timestamp.tv_usec;
-// 	for(i = 0;i < 5;i++)
-// 	{
-// 		sprintf(file_name, "frame_%lld_channel_%d_count_%d.%s",timeout, i, count_frame++, img_sufix[i]);
-// 		FILE* fp = fopen(file_name, "wb+");
-// 		if(fp){
-// 				fwrite(frmdata->resize_buf[i], 1, buffer_len[i], fp);
-// 		}
-// 		fflush(fp);
-// 		fclose(fp);
-// 	}
-// }
-
-
 static void _cam_save_local_get_frame_from_null(hal_frame_data_t *frmdata)
 {
 	pthread_mutex_lock(&g_camera_save_local_obj.mutex[frmdata->channel]);
@@ -111,19 +88,19 @@ static int _config_file_parser(const char *file_name)
 	{
 		if (0 == strcmp("OV10635", s))
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
 		}
 		else if (0 == strcmp("OV2718_XC7027", s))
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
 		}
 		else if (0 == strcmp("OV10640_OV490", s))
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
 		}
 		else
 		{
-			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
+			gChains_usecaseCfg.captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
 		}
 
 		Vps_printf("capture-name:     [%s]\n", s ? s : "UNDEF");

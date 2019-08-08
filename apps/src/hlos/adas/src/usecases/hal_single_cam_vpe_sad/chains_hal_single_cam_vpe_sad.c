@@ -9,16 +9,11 @@
 #include <src/hlos/adas/include/chains.h>
 #include <src/hlos/common/chains_common.h>
 
-// #define CAPTURE_SENSOR_WIDTH     (1280)
-// #define CAPTURE_SENSOR_HEIGHT    (720)
+#define CAPTURE_SENSOR_WIDTH     (1280)
+#define CAPTURE_SENSOR_HEIGHT    (720)
 
-// #define LCD_DISPLAY_WIDTH         (1280)
-// #define LCD_DISPLAY_HEIGHT        (720)
-
-#define CAPTURE_SENSOR_WIDTH     (1920)
-#define CAPTURE_SENSOR_HEIGHT    (1080)
-#define LCD_DISPLAY_WIDTH        (1920)
-#define LCD_DISPLAY_HEIGHT       (1080)
+#define LCD_DISPLAY_WIDTH         (1280)
+#define LCD_DISPLAY_HEIGHT        (720)
 
 Chains_hal_single_cam_vpe_sadAppObj g_hal_single_cam_vpe_sad_AppObj;
 
@@ -111,7 +106,7 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
 
     pObj->captureOutWidth  = CAPTURE_SENSOR_WIDTH;
     pObj->captureOutHeight = CAPTURE_SENSOR_HEIGHT;
-#if 0
+#if 1
     ChainsCommon_SingleCam_SetCapturePrms(&(pUcObj->CapturePrm),
             CAPTURE_SENSOR_WIDTH,
             CAPTURE_SENSOR_HEIGHT,
@@ -120,7 +115,7 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
             pObj->chainsCfg->captureSrc
             );
 #endif
-    pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_1080P;//CHAINS_CAPTURE_SRC_HDMI_1080P;//pObj->chainsCfg->captureSrc;
+    pObj->vidSensorPrm.captureSrcId = CHAINS_CAPTURE_SRC_HDMI_720P;//CHAINS_CAPTURE_SRC_HDMI_1080P;//pObj->chainsCfg->captureSrc;
     pObj->vidSensorPrm.isLVDSCaptMode = FALSE;
     pObj->vidSensorPrm.numLvdsCh = 1;
 
@@ -153,10 +148,10 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
                                 TRUE);
 #endif
 
-	ChainsCommon_MultiCam_SetCapturePrms(&pUcObj->CapturePrm,
-                                pObj->vidSensorPrm.numLvdsCh);
+	// ChainsCommon_MultiCam_SetCapturePrms(&pUcObj->CapturePrm,
+    //                             pObj->vidSensorPrm.numLvdsCh);
 
-	chains_hal_single_cam_vpe_sad_set_output_frame_prms(&pUcObj->CapturePrm);
+//	chains_hal_single_cam_vpe_sad_set_output_frame_prms(&pUcObj->CapturePrm);
     /*VPE0 resize nothing, and color format to BGR*/
     chains_hal_single_cam_vpe_sad_SetVpePrm(&pUcObj->VPE_resize_0Prm,
                                 1,
@@ -296,8 +291,8 @@ Void chains_hal_single_cam_vpe_sad(Chains_Ctrl *chainsCfg)
     char ch;
     UInt32 done = FALSE;
     Chains_hal_single_cam_vpe_sadAppObj chainsObj;
-    chainsCfg->displayType = CHAINS_DISPLAY_TYPE_HDMI_1080P;
-    chainsCfg->captureSrc = CHAINS_CAPTURE_SRC_HDMI_1080P;
+    chainsCfg->displayType = CHAINS_DISPLAY_TYPE_HDMI_720P;
+    chainsCfg->captureSrc = CHAINS_CAPTURE_SRC_HDMI_720P;
     chainsObj.chainsCfg = chainsCfg;
 
     chains_hal_single_cam_vpe_sad_Create(&chainsObj.ucObj, &chainsObj);

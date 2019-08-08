@@ -113,6 +113,17 @@ static void* _cam_save_local_thread_func(void* ptr)
 		if((0 == ret) && ((count_frame%1) == 0))
 		{
 			#if 1
+			static long long time_old = 0;
+			long long time_new = 0;
+			long long deltaT = 0;
+
+			time_new = 1000000 * (long long)frmdata.timestamp.tv_sec + (long long)frmdata.timestamp.tv_usec;
+			deltaT = time_new - time_old;
+			time_old = time_new;
+			printf("\r\n### Delta Time = %lld \r\n", deltaT);
+			#endif
+
+			#if 1
 			//if(count_frame == 100){
 			char file_name[500] = {0};
 			long long timeout = 0;
