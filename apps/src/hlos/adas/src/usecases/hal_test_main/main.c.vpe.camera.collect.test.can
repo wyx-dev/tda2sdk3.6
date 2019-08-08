@@ -73,6 +73,85 @@ static void SigSetup(void)
     sigaction(SIGHUP, &action, NULL);
 }
 
+/*******************************************************************************
+ *  函数名：can_run
+ *  描述：can接口内部测试用例
+ *  输入：无
+ *  输出：无
+ *  返回：无
+ *  备注：无
+ *******************************************************************************/
+void can_run(void)
+{
+	int i = 0;
+	int j = 0;
+	int ret = 0;
+	int can0_len = 1;
+	hal_can_t *can0 = NULL;
+	hal_can_msg_t can0_msg;
+	char can_file_name[20] = {0};
+	char can_data[] = {0};
+
+	printf("---HAL CAN0 START---\n");
+
+	can0 = (hal_can_t *)malloc(sizeof(hal_can_t));
+	hal_can_init(can0);
+	chdir("/run/media/sda1/hubing/image");
+
+	sprintf(can_file_name, "%s","can.log");
+	FILE* fcanlog = fopen(can_file_name, "wb+");
+
+	while (1)
+	{
+		ret = hal_can_read_msg(can0, &can0_msg, can0_len);
+		if (ret < 0)
+		{
+			hal_can_deinit(can0);
+		}
+		else if (ret < 1)
+		{
+			//do nothing
+		}
+		else
+		{
+			for (j = 0; j < ret; j++)
+			{
+				hal_can_read_msg(can0, &can0_msg, 1);
+			}
+		}
+
+		// printf("---can_id = 0x%x\n", can0_msg.can_id);
+		// printf("---can_dlc = 0x%x\n", can0_msg.can_dlc);
+		// printf("---timestamp.tv_sec = %ld\n", can0_msg.timestamp.tv_sec);
+		// printf("---timestamp.tv_usec = %ld\n", can0_msg.timestamp.tv_usec);
+		// printf("---CAN0 data:");
+
+		// for (i = 0; i < can0_msg.can_dlc; i++)
+		// {
+        //     printf(" data[%d] = 0x%x", i, can0_msg.data[i]);
+		// }
+		sprintf(can_data, "%lld.%lld \t%x \t%x \t%x%x%x%x%x%x%x%x\n", 
+			(long long)can0_msg.timestamp.tv_sec,(long long)can0_msg.timestamp.tv_usec,can0_msg.can_id,can0_msg.can_dlc,
+			can0_msg.data[0],can0_msg.data[1],can0_msg.data[2],can0_msg.data[3],
+			can0_msg.data[4],can0_msg.data[5],can0_msg.data[6],can0_msg.data[7]);
+
+        printf("can data = %s",can_data);
+		fwrite(can_data, 1, strlen(can_data), fcanlog);
+		fflush(fcanlog);
+	}
+
+	hal_can_deinit(can0);
+	//printf("---HAL CAN0 END---\n");
+
+	return ;
+}
+
+
+static void* _can_thread_func(void* ptr)
+{
+	can_run();
+	return 0;
+}
 
 /*******************************************************************************
  *  函数名：_cam_save_local_thread_func
@@ -127,11 +206,11 @@ static void* _cam_save_local_thread_func(void* ptr)
 			char file_name[64] = {0};
 			long long timeout = 0;
 			memset(file_name, 0, 64);
-			timeout = 1000000 * (long long)frmdata.timestamp.tv_sec + frmdata.timestamp.tv_usec;
+			timeout = 1000000 * (long long)frmdata.timestamp.tv_sec + (long long)frmdata.timestamp.tv_usec;
 
 			if(1 == channel_num)
 			{
-				sprintf(file_name, "%ld.%ld.bgr", frmdata.timestamp.tv_sec,frmdata.timestamp.tv_usec);
+				sprintf(file_name, "%lld.%lld.bgr", (unsigned long long)frmdata.timestamp.tv_sec,(unsigned long long)frmdata.timestamp.tv_usec);
 				FILE* fp = fopen(file_name, "wb+");
 				if(fp)
 				{
@@ -139,7 +218,7 @@ static void* _cam_save_local_thread_func(void* ptr)
 					fflush(fp);
 					fclose(fp);
 				}
-				sprintf(time_data, "%ld.%ld\n", frmdata.timestamp.tv_sec,frmdata.timestamp.tv_usec);
+				sprintf(time_data, "%lld.%lld\n", (unsigned long long)frmdata.timestamp.tv_sec,(unsigned long long)frmdata.timestamp.tv_usec);
 				fwrite(time_data, 1, strlen(time_data), ftimestamp);
 				fflush(ftimestamp);
 #if 0
@@ -207,7 +286,9 @@ void camera_run(void)
 {
 	int i = 0,ret = 0, group_index = 0, framerate = 25;
 	int cam_channel[4] = {0,1,2,3};
+	int can = 0;
 	pthread_t cam_pthread_id[4];
+	pthread_t can_pthread_id;
 
 	SigSetup();
 	channel_num = 1;
@@ -232,6 +313,7 @@ void camera_run(void)
 		pthread_create(&cam_pthread_id[i], NULL, _cam_save_local_thread_func, &cam_channel[i]);
 		usleep(10);
 	}
+	pthread_create(&can_pthread_id, NULL, _can_thread_func, &can);
 
 	for(i = 0; i < channel_num; i++)
 	{
