@@ -26,7 +26,7 @@ int32_t MT_crop_image(uint8_t src[],
                       uint32_t uStart,
                       uint32_t vStart);
 
-int32_t MT_resize_image_h4(uint8_t src[],
+int32_t MT_resize_image_h8(uint8_t src[],
                            uint32_t srcWidth,
                            uint32_t srcHeight,
                            uint32_t srcPitch,
@@ -34,3 +34,7 @@ int32_t MT_resize_image_h4(uint8_t src[],
                            uint32_t dstWidth,
                            uint32_t dstHeight,
                            uint32_t dstPitch);
+
+void match_template_malloc_buffer(uint32_t outScorePitch, uint32_t outScoreHeight, uint32_t imgHeight);
+void match_template_free_buffer(uint32_t outScorePitch, uint32_t outScoreHeight, uint32_t imgHeight);
+

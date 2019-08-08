@@ -487,6 +487,7 @@ int hal_modl_put_input_buffer(
         return HAL_MODL_EINVALID_PARAMS;
     }
 
+    Vps_printf("Hal modl input: proc id:%d!\n", procID);
     pObj->pFrame[procID]->bufAddr[0] = data;
 
     status = NullSrcIpcOutLink_PutBuffer(procID, &(pObj->inBuffer[procID]));
@@ -519,6 +520,7 @@ int hal_modl_wait_output_buffer(
     System_Buffer *pSysBuffer = NULL;
     System_MetaDataBuffer *pMetaBuffer = NULL;
     HAL_MODL_OutputBuffer output;
+    int timeout_count = 0;
 
     if(procID >= MODL_PROC_ID_MAX)
     {
@@ -538,6 +540,11 @@ int hal_modl_wait_output_buffer(
         else
         {
             usleep(200);
+            timeout_count++;
+            if (timeout_count >= 5000)
+            {
+                Vps_printf("!!!!!!!!!!!Hal modl timeout!!!!!!: proc id:%d!\n", procID);
+            }
         }
     }
 
@@ -546,6 +553,7 @@ int hal_modl_wait_output_buffer(
     output.size = pMetaBuffer->metaBufSize[0];
     hal_modl_cache_inv(output.frame, output.size);
 
+    Vps_printf("Hal modl get result: proc id:%d!\n", procID);
     if(NULL != gChainsObjModl.modlNet[procID].handle)
     {
         gChainsObjModl.modlNet[procID].handle(procID, &output, user_arg);

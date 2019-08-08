@@ -86,9 +86,11 @@ XDAS_Int32 match_template_algo_alloc(const IALG_Params *params,
 
   const MT_CreateParams *createParams =
        (const MT_CreateParams*)(const void*)params;
-  uint32_t resizedSize = (createParams->imgWidth) * (createParams->imgHeight) / 4;
+  uint32_t resizedSize = (createParams->imgWidth) * (createParams->imgHeight) / 8;
   uint32_t patchSize = (createParams->patchWidth) * (createParams->patchHeight);
   uint32_t searchSize = (createParams->searchWidth) * (createParams->searchHeight);
+  uint32_t outScoreWidth = createParams->searchWidth - createParams->patchWidth + 1;
+  uint32_t outScoreHeight = createParams->searchHeight - createParams->patchHeight + 1;
 
   memRec[ALG_HANDLE_RESIZED_IMG].size         = ALIGN_SIZE(sizeof(uint8_t)*resizedSize, 8);
   memRec[ALG_HANDLE_RESIZED_IMG].space        = IALG_EXTERNAL;
@@ -109,6 +111,9 @@ XDAS_Int32 match_template_algo_alloc(const IALG_Params *params,
   memRec[ALG_HANDLE_SEARCH_IMG].space        = IALG_EXTERNAL;
   memRec[ALG_HANDLE_SEARCH_IMG].attrs         = IALG_SCRATCH;
   memRec[ALG_HANDLE_SEARCH_IMG].alignment     = 128;
+
+  
+  match_template_malloc_buffer(outScoreWidth, outScoreHeight, createParams->imgHeight);
 
   return (status);
 }
@@ -240,7 +245,7 @@ XDAS_Int32 match_template_algo_process(IVISION_Handle Handle,
   uint32_t tempImgHeight = algHandle->createParams.patchHeight;
   uint32_t searchWidth = algHandle->createParams.searchWidth;
   uint32_t searchHeight = algHandle->createParams.searchHeight;
-  uint32_t resizedWidth = imgWidth/4, resizedHeight=imgHeight;
+  uint32_t resizedWidth = imgWidth/8, resizedHeight=imgHeight;
 
   // data Pointers
   uint8_t* tempImgU08 = (uint8_t*)(void*)algHandle->memRec[ALG_HANDLE_TEMPLATE_U08].base;
@@ -252,34 +257,34 @@ XDAS_Int32 match_template_algo_process(IVISION_Handle Handle,
       // Resize current image
       //Vps_printf("the first image!\n");
       uint8_t* thisImg = inBufs->bufDesc[0]->bufPlanes[0].buf;
-      MT_resize_image_h4(thisImg, imgWidth, imgHeight, imgWidth, resizedImg, resizedWidth, resizedHeight, resizedWidth);
+      MT_resize_image_h8(thisImg, imgWidth, imgHeight, imgWidth, resizedImg, resizedWidth, resizedHeight, resizedWidth);
   } else {
       // 1. Get remote patch on last image
       MT_crop_image(resizedImg, resizedWidth, resizedHeight, resizedWidth,
                     tempImgU08, tempImgWidth, tempImgHeight, tempImgWidth,
-                    lastFoeX/4 - tempImgWidth/2, lastFoeY - tempImgHeight/2);
+                    lastFoeX/8 - tempImgWidth/2, lastFoeY - tempImgHeight/2);
 
       // 2. Resize current image
       uint8_t* thisImg = inBufs->bufDesc[0]->bufPlanes[0].buf;
-      MT_resize_image_h4(thisImg, imgWidth, imgHeight, imgWidth, resizedImg, resizedWidth, resizedHeight, resizedWidth);
+      MT_resize_image_h8(thisImg, imgWidth, imgHeight, imgWidth, resizedImg, resizedWidth, resizedHeight, resizedWidth);
 
       // 3. Get target image for searching
       MT_crop_image(resizedImg, resizedWidth, resizedHeight, resizedWidth,
                     searchImg, searchWidth, searchHeight, searchWidth,
-                    lastFoeX/4 - searchWidth/2, lastFoeY - searchHeight/2);
+                    lastFoeX/8 - searchWidth/2, lastFoeY - searchHeight/2);
 
       // 4. Matching template
-      int32_t maxLocScore[3];
+      int32_t maxLocScore[4];
       int32_t state = MT_match_template_dsp(searchImg, searchWidth, searchHeight, searchWidth,
                                             tempImgU08, tempImgI16, tempImgWidth, tempImgHeight, tempImgWidth,
                                             maxLocScore);
       //Vps_printf("maxLoc: %u, %u, score=%u\n", maxLocScore[0], maxLocScore[1], maxLocScore[2]);
 
       // output
-      mt[0] = (maxLocScore[0] - ((int32_t)searchWidth/2 - (int32_t)tempImgWidth/2)) * 4;
+      mt[0] = (maxLocScore[0] - ((int32_t)searchWidth/2 - (int32_t)tempImgWidth/2)) * 8;
       mt[1] = maxLocScore[1] - ((int32_t)searchHeight/2 - (int32_t)tempImgHeight/2);
       mt[2] = maxLocScore[2];
-      mt[3] = state;
+      mt[3] = maxLocScore[3];
   }
 
   memcpy(outBufs->bufDesc[0]->bufPlanes[0].buf, &mt, sizeof(int32_t) * 4);
@@ -386,9 +391,12 @@ XDAS_Void  match_template_algo_deactivate(IALG_Handle handle)
 XDAS_Int32 match_template_algo_free(IALG_Handle handle, IALG_MemRec *memRec)
 {
   int32_t status = IALG_EOK;
+  
   MT_Handle algHandle = (MT_Handle)(void*)(handle);
-
+  uint32_t outScoreWidth = algHandle->createParams.searchWidth - algHandle->createParams.patchWidth + 1;
+  uint32_t outScoreHeight = algHandle->createParams.searchHeight - algHandle->createParams.patchHeight + 1;
   memcpy(memRec, algHandle->memRec, sizeof(IALG_MemRec)*algHandle->numMemRecs);
+  match_template_free_buffer(outScoreWidth, outScoreHeight, algHandle->createParams.imgHeight);
 
   return status;
 }

@@ -438,8 +438,7 @@ int hal_match_template_classic_wait_output_buffer(
     {
         gChainsObjMTC.createParams[procID].handle(procID, &output);
     }
-
-    Vps_printf("******************MTC:A15 PROC DONE!\n");
+    
     status = IpcInNullLink_FreeBuffer(
                  procID + offset,
                  (void*)pSysBuffer

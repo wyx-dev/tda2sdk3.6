@@ -352,6 +352,7 @@ int hal_match_template_put_input_buffer(
                  &(pObj->inBuffer[procID])
                  );
 
+    Vps_printf("******************REMOTE MTC:A15 start to wait!\n");
     status = (status == SYSTEM_LINK_STATUS_SOK) ? HAL_MT_OK : HAL_MT_EFAIL;
 
     return status;
@@ -405,6 +406,8 @@ int hal_match_template_wait_output_buffer(
         gChainsObjMT.createParams[procID].handle(procID, &output);
     }
 
+    Vps_printf("******************REMOTE MTC:A15 proc done!\n");  
+      
     status = IpcInNullLink_FreeBuffer(
                  procID + offset,
                  (void*)pSysBuffer

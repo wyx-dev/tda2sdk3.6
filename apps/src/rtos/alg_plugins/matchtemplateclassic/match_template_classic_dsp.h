@@ -2,20 +2,27 @@
 #define MATCH_TEMPLATE_CLASSIC_DSP_H
 
 #include <stdint.h>
+#define HAL_MTC_OK              (0)
+#define HAL_MTC_EFAIL           (-1)
+#define HAL_MTC_ETIMEOUT        (-2)
+#define HAL_MTC_EALLOC          (-3)
+#define HAL_MTC_EBUSY           (-4)
+#define HAL_MTC_EINVALID_PARAMS (-5)
 
 #define MAX_RECT_NUM         (6)
-#define FIX_TEMPL_WIDTH      (32)
 #define ORIGIN_IMG_WIDTH     (1280)
 #define ORIGIN_IMG_HEIGHT    (720)
 
-#define MAX_TEMPL_HIGHT    (64)
-#define MAX_CUR_TEMPL_SIZE_RATIO    (9)
-#define CUR_IMG_WIDTH_ALIGN    (4)
+#define MAX_TEMPL_SHORT_EDGE      (48)
+#define MAX_TEMPL_LONG_EDGE       (64)
+#define MAX_SEARCH_SIZE_RATIO     (9)
+#define SEARCH_IMG_WIDTH_ALIGN    (4)
 
-#define MAX_CUR_IMG_SIZE    (FIX_TEMPL_WIDTH*MAX_TEMPL_HIGHT*MAX_CUR_TEMPL_SIZE_RATIO)
-#define MAX_OUT_SCORE_SIZE  (FIX_TEMPL_WIDTH*2+1)*(MAX_TEMPL_HIGHT*2+1)
+#define MAX_SEARCH_IMG_SIZE    (MAX_TEMPL_LONG_EDGE*MAX_TEMPL_SHORT_EDGE*MAX_SEARCH_SIZE_RATIO)
+#define MAX_OUT_SCORE_SIZE  (MAX_TEMPL_LONG_EDGE*2+1)*(MAX_TEMPL_SHORT_EDGE*2+1)
 #define SCRACH_BUFFER_SIZE  (MAX_OUT_SCORE_SIZE*20+40)
-#define TOTAL_L2_BUFFER    (MAX_CUR_IMG_SIZE + MAX_OUT_SCORE_SIZE*sizeof(float) + FIX_TEMPL_WIDTH * MAX_TEMPL_HIGHT * 3)
+#define TOTAL_L2_BUFFER    (MAX_SEARCH_IMG_SIZE + MAX_OUT_SCORE_SIZE*sizeof(float) + MAX_TEMPL_LONG_EDGE * MAX_TEMPL_SHORT_EDGE * 3)
+
 
 typedef enum
 {
@@ -30,14 +37,16 @@ typedef enum
     ERR_CODE_NUM = 7
 }ErrorCode;
 
-typedef struct
+typedef enum
 {
-  float left;
-  float top;
-  float right;
-  float bottom;
-}Rect;
+    MODE_W32H64_JUMP = 0x0,
+    MODE_W48H48_JUMP = 0x1,
+    MODE_W64H48_JUMP = 0x2,
 
+    MODE_W32H64_NOJUMP = 0x10,
+    MODE_W48H48_NOJUMP = 0x11,
+    MODE_W64H48_NOJUMP = 0x12
+}MatchMode;
 
 typedef struct
 {
@@ -45,7 +54,7 @@ typedef struct
   int top;
   int right;
   int bottom;
-}Rect_Int;
+}Rect;
 
 typedef struct
 {
@@ -54,6 +63,7 @@ typedef struct
   int pad_num;
   Rect templ_pad[MAX_RECT_NUM];
   Rect cur_pad[MAX_RECT_NUM];
+  int match_mode[MAX_RECT_NUM];
 }MtInParam;
 
 typedef struct

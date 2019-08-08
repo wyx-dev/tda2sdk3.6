@@ -126,7 +126,7 @@ static void output_handle(hal_match_template_classic_handle_t handle, HAL_MTC_Ou
 
     for ( i = 0; i < result->result_num; i++)
     {
-        printf("A15 get MTC result:left:%f,top:%f,right:%f,bottom:%f,value:%f!\n",
+        printf("A15 get MTC result:left:%d,top:%d,right:%d,bottom:%d,value:%f!\n",
             result->result[i].new_rect.left,result->result[i].new_rect.top,
             result->result[i].new_rect.right,result->result[i].new_rect.bottom,result->result[i].value);
     }
@@ -163,7 +163,7 @@ int hal_match_template_classic_run(void)
     para->templ_pad[0].left = 264;
     para->templ_pad[0].top = 293;
     para->templ_pad[0].right = 492;
-    para->templ_pad[0].bottom = 531;
+    para->templ_pad[0].bottom = 521;
 
     para->templ_pad[1].left = 658;
     para->templ_pad[1].top = 335;
@@ -190,10 +190,10 @@ int hal_match_template_classic_run(void)
     para->templ_pad[5].right = 100;
     para->templ_pad[5].bottom = 100;
 
-    para->cur_pad[0].left = 200;
-    para->cur_pad[0].top = 200;
-    para->cur_pad[0].right = 550;
-    para->cur_pad[0].bottom = 600;
+    para->cur_pad[0].left = 111;
+    para->cur_pad[0].top = 82;
+    para->cur_pad[0].right = 703;
+    para->cur_pad[0].bottom = 674;
 
     para->cur_pad[1].left = 612;
     para->cur_pad[1].top = 289;
@@ -219,6 +219,13 @@ int hal_match_template_classic_run(void)
     para->cur_pad[5].top = 0;
     para->cur_pad[5].right = 200;
     para->cur_pad[5].bottom = 200;
+
+    para->match_mode[0] = 0x11;
+    para->match_mode[1] = 0x11;
+    para->match_mode[2] = 0x11;
+    para->match_mode[3] = 0x11;
+    para->match_mode[4] = 0x11;
+    para->match_mode[5] = 0x11;
 
     ret = hal_match_template_classic_init_process_level();
     assert(HAL_MTC_OK == ret);
