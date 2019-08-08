@@ -396,13 +396,28 @@ static int hal_single_cam_vpe_sad_get_timestamp(hal_frame_data_t *frmdata, UInt6
 	deltaTimestamp = a15Timestamp - m4_timestamp;
 	gettimeofday(&time, NULL);
 
-	if(deltaTimestamp < 1000000){
+	if((deltaTimestamp < 1000000) && (time.tv_usec > deltaTimestamp)){
 		frmdata->timestamp.tv_sec =  time.tv_sec;
-		frmdata->timestamp.tv_usec = time.tv_usec - deltaTimestamp;
-	}else{
-		frmdata->timestamp.tv_sec =  time.tv_sec - (deltaTimestamp/1000000);
-		frmdata->timestamp.tv_usec = time.tv_usec - deltaTimestamp%1000000;
+        frmdata->timestamp.tv_usec = time.tv_usec - deltaTimestamp;
+    }
+
+    if((deltaTimestamp < 1000000) && (time.tv_usec < deltaTimestamp)){
+		frmdata->timestamp.tv_sec =  time.tv_sec -1;
+        frmdata->timestamp.tv_usec = time.tv_usec + 1000000 - deltaTimestamp;
+    }
+
+    if((deltaTimestamp > 1000000) && (time.tv_usec > (long)(deltaTimestamp%1000000)))
+	{
+		frmdata->timestamp.tv_sec =  time.tv_sec - (long)(deltaTimestamp/1000000);
+		frmdata->timestamp.tv_usec = time.tv_usec - (long)(deltaTimestamp%1000000);
 	}
+
+    if((deltaTimestamp > 1000000) && (time.tv_usec < (long)(deltaTimestamp%1000000)))
+	{
+		frmdata->timestamp.tv_sec =  time.tv_sec - (long)(deltaTimestamp/1000000) -1;
+		frmdata->timestamp.tv_usec = time.tv_usec +1000000 - (long)(deltaTimestamp%1000000);
+	}
+
 	//Vps_printf("\n--End-----hal_single_camera_get_timestamp--------\n");
 	return 0;
 }
