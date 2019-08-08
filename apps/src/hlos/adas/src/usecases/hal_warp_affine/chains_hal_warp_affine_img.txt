@@ -1,0 +1,25 @@
+digraph chains_hal_warp_affine {
+
+    ColorScheme [shape=none, margin=0, label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+    <TR><TD bgcolor="palegreen">DSP1</TD></TR>
+    <TR><TD bgcolor="lightsalmon">A15</TD></TR>
+    </TABLE>>];
+
+    /************** LINKS ************************/
+    NullSource [color=lightsalmon, style=filled]
+    IPCOut_A15_0_DSP1_0 [color=lightsalmon, style=filled]
+    IPCIn_DSP1_A15_0_0 [color=palegreen, style=filled]
+    Alg_WarpAffine [color=palegreen, style=filled]
+    IPCOut_DSP1_A15_0_0 [color=palegreen, style=filled]
+    IPCIn_A15_0_DSP1_0 [color=lightsalmon, style=filled]
+    Null [color=lightsalmon, style=filled]
+
+    /************** CONNECTIONS ************************/
+    Alg_WarpAffine -> IPCOut_DSP1_A15_0_0
+    NullSource -> IPCOut_A15_0_DSP1_0
+    IPCOut_A15_0_DSP1_0 -> IPCIn_DSP1_A15_0_0
+    IPCIn_DSP1_A15_0_0 -> Alg_WarpAffine
+    IPCOut_DSP1_A15_0_0 -> IPCIn_A15_0_DSP1_0
+    IPCIn_A15_0_DSP1_0 -> Null
+}

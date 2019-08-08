@@ -14,12 +14,12 @@ LD=$(A15_TOOLCHAIN_PREFIX)g++
 
 LIB_BASE_DIR=$(DEST_ROOT)/lib/$(PLATFORM)/$(CORE)/$(PROFILE_a15_0)
 OBJ_BASE_DIR=$(DEST_ROOT)/obj/$(MODNAME)/$(PLATFORM)/$(CORE)/$(PROFILE_a15_0)
-EXE_BASE_DIR=$(DEST_ROOT)/vision_sdk/bin/$(PLATFORM)/
+EXE_BASE_DIR=$(DEST_ROOT)/vision_sdk/bin/$(PLATFORM)
 
 LIB_DIR=$(LIB_BASE_DIR)
 
-CC_OPTS=-c -Wall -Warray-bounds -fPIC
-CX_OPTS=-c -Wall -Warray-bounds -fPIC
+CC_OPTS=-c -Wall -Warray-bounds -fPIC -Wno-unused-function -Wno-unused-variable
+CX_OPTS=-c -Wall -Warray-bounds -fPIC -Wno-unused-function -Wno-unused-variable
 
 ifeq ($(TREAT_WARNINGS_AS_ERROR), yes)
 

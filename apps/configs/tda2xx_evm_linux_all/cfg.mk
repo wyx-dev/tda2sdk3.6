@@ -114,7 +114,8 @@ DATA_VIS_INCLUDE=no
 # Enable below macro to enable OPENVX into Vision SDK
 #
 OPENVX_INCLUDE=no
-
+PENCL_INCLUDE=no
+ENABLE_OPENCV=no
 CIO_REDIRECT=yes
 
 HS_DEVICE=no
@@ -132,5 +133,8 @@ DEFAULT_KERNEL_CONFIG := ti_sdk_dra7x_release_defconfig
 # For TDA2x
 DEFAULT_DTB := dra7-evm-infoadas.dtb dra7-evm-infoadas-lcd-lg.dtb
 CMEM_INCLUDE=yes
+
+HAL_MULTI_CAMERA_DISPLAY=yes
+HAL_MULTI_CAMERA_NULL=no
 
 include $($(MAKEAPPNAME)_PATH)/configs/$(MAKECONFIG)/uc_cfg.mk

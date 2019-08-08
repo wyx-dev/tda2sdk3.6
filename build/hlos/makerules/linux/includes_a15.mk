@@ -97,6 +97,14 @@ ifeq ($(IPUMM_INCLUDE), yes)
   DEFINE += -DIPUMM_INCLUDE
 endif
 
+ifeq ($(HAL_MULTI_CAMERA_DISPLAY), yes)
+  DEFINE += -DHAL_MULTI_CAMERA_DISPLAY
+endif
+
+ifeq ($(HAL_MULTI_CAMERA_NULL), yes)
+  DEFINE += -DHAL_MULTI_CAMERA_NULL
+endif
+
 ifeq ($(BUILD_INFOADAS), yes)
   DEFINE += -DBUILD_INFOADAS
 endif

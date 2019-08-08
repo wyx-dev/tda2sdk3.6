@@ -220,6 +220,10 @@ typedef Ptr VidSensor_Handle;
 typedef enum {
     VID_SENSOR_OV10635,
     /**< Omnivision OV10635 sensor */
+    VID_SENSOR_XC7027,
+    /**< XChips xc7027 ISP + OV2718 Sensor */
+	 VID_SENSOR_OV490_OV10640,
+    /**< XChips OV490 ISP + OV10640 Sensor */
     VID_SENSOR_OV10630,
     /**< Omnivision OV10630 sensor*/
     VID_SENSOR_AR0132_RCCC,
@@ -228,6 +232,10 @@ typedef enum {
     /**< Aptina MT9M024 sensor */
     VID_SENSOR_MULDES_OV1063X,
     /**< Omnivision OV10630 sensor */
+    VID_SENSOR_MULDES_XC7027,
+    /**< XChip xc7027 ISP + OV2718 sensor */
+	VID_SENSOR_MULDES_OV490_OV10640,
+    /**< XChip OV490 ISP + OV10460 sensor */
     VID_SENSOR_MULDES_AR0132RCCC,
     /**< Aptina AR0132 RCCC sensor stereo module*/
     VID_SENSOR_OV10640,

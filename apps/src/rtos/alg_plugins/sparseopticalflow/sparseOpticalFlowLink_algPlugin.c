@@ -84,6 +84,9 @@ Limited License.
 #include "sparseOpticalFlowLink_priv.h"
 #include <include/link_api/system_common.h>
 #include <src/rtos/utils_common/include/utils_mem.h>
+#ifdef BUILD_DSP
+#include "sparse_optical_flow_algo.h"
+#endif
 
 /**
  *******************************************************************************
@@ -113,6 +116,10 @@ Int32 AlgorithmLink_sparseOpticalFlow_initPlugin()
     pluginFunctions.AlgorithmLink_AlgPluginDelete =
         AlgorithmLink_sparseOpticalFlowDelete;
 
+#ifdef BUILD_DSP
+    algId = ALGORITHM_LINK_DSP_ALG_SPARSE_OPTICAL_FLOW;
+#endif
+
 #ifdef BUILD_ARP32
     algId = ALGORITHM_LINK_EVE_ALG_SPARSE_OPTICAL_FLOW;
 #endif
@@ -141,10 +148,18 @@ UInt32 AlgorithmLink_sparseOpticalFlowAlgCreate(
      * Intialize the algorithm instance with the alocated memory
      * and user create parameters
      */
+#ifdef BUILD_DSP
+    pObj->algSofHandle = AlgIvision_create(
+                            &SOF_MOMENTA_VISION_FXNS,
+                            (IALG_Params*)&pObj->algSofCreateParams
+                            );
+#endif
+#ifdef BUILD_ARP32
     pObj->algSofHandle = AlgIvision_create(
                             &SOF_TI_VISION_FXNS,
                             (IALG_Params*)&pObj->algSofCreateParams
                             );
+#endif
     UTILS_assert(pObj->algSofHandle!=NULL);
 
     pObj->algSofOutBufSizeKeyPoints     =
@@ -524,12 +539,14 @@ Int32 AlgorithmLink_sparseOpticalFlowCreate(void * pObj,void * pCreateParams)
         UTILS_assert(chId < SPARSEOPTICALFLOW_LINK_MAX_CH);
         pPrevChInfo = &prevLinkInfo.queInfo[prevLinkQId].chInfo[chId];
 
+#ifdef BUILD_ARP32
         if(System_Link_Ch_Info_Get_Flag_Data_Format(pPrevChInfo->flags)
                 != SYSTEM_DF_YUV420SP_UV
         )
         {
             UTILS_assert(NULL);
         }
+#endif
 
         AlgorithmLink_sparseOpticalFlowAlgParamsInit(
                         pSOFObj, &pSOFObj->chObj[chId], pPrevChInfo);
@@ -782,6 +799,18 @@ Int32 AlgorithmLink_sparseOpticalFlowProcess(void * pObj)
 
                 pChObj->algSofInArgs.numCorners = pChObj->algSofOutArgs.numCorners;
 
+                Cache_wb(
+                    (UInt8*)pChObj->pAlgSofOutBufTrackedPoints,
+                    sizeof(strackInfo)*pChObj->algSofCreateParams.maxNumKeyPoints,
+                    Cache_Type_ALLD,
+                    TRUE);
+
+                Cache_wb(
+                    (UInt8*)pChObj->pAlgSofOutBufErrEst,
+                    sizeof(UInt16)*pChObj->algSofCreateParams.maxNumKeyPoints,
+                    Cache_Type_ALLD,
+                    TRUE);
+
                 EDMA_UTILS_memcpy2D(
                        pOutMetaBuf->bufAddr[0],
                        pChObj->pAlgSofOutBufTrackedPoints,
@@ -799,6 +828,18 @@ Int32 AlgorithmLink_sparseOpticalFlowProcess(void * pObj)
                        sizeof(UInt16),
                        sizeof(UInt16)
                        );
+
+                Cache_wb(
+                    (UInt8*)pOutMetaBuf->bufAddr[0],
+                    sizeof(strackInfo)*pChObj->algSofCreateParams.maxNumKeyPoints,
+                    Cache_Type_ALLD,
+                    TRUE);
+
+                Cache_wb(
+                    (UInt8*)pOutMetaBuf->bufAddr[2],
+                    sizeof(UInt16)*pChObj->algSofCreateParams.maxNumKeyPoints,
+                    Cache_Type_ALLD,
+                    TRUE);
 
                 pOutMetaBuf->flags = 0;
 

@@ -57,6 +57,10 @@ endif
 endif
 
 pdk:
+	cp $(pdk_PATH)/momenta/eve_lib/tidl_algo.lib $(pdk_PATH)/../../algorithms/REL.TIDL.01.01.03.00/modules/ti_dl/lib/eve/release/ -far
+	cp $(vision_sdk_PATH)/apps/src/rtos/alg_plugins/warpaffine/vxlib/VXLIB_warpAffineBilinear_i8u_c32f_o8u.h $(pdk_PATH)/../../algorithms/vxlib_c66x_1_1_3_0/packages/ti/vxlib/src/vx/VXLIB_warpAffineBilinear_i8u_c32f_o8u/c66/ -far
+	cp $(pdk_PATH)/momenta/vxlib/* $(pdk_PATH)/../../algorithms/vxlib_c66x_1_1_3_0/packages/ti/vxlib/lib/ -far
+	cp $(pdk_PATH)/momenta/vxlib/VXLIB_warpAffineNearest_i8u_c32f_o8u.h $(pdk_PATH)/../../algorithms/vxlib_c66x_1_1_3_0/packages/ti/vxlib/src/vx/VXLIB_warpAffineNearest_i8u_c32f_o8u/c66 -far
 ifeq ($(PROC_IPU_BUILD_INCLUDE),yes)
 	$(MAKE) -C $(pdk_PATH)/packages/ti/build/ pdk_libs $(PDK_BUILD_OPTIONS) BOARD=$(PDK_BOARD) CORE=ipu1_0 BUILD_PROFILE=$(PROFILE_ipu1_0)
 	$(MAKE) -C $(pdk_PATH)/packages/ti/build/ pdk_libs $(PDK_BUILD_OPTIONS) BOARD=$(PDK_BOARD) CORE=ipu1_1 BUILD_PROFILE=$(PROFILE_ipu1_1)

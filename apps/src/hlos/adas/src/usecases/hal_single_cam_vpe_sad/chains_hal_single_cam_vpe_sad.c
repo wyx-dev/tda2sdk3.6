@@ -141,6 +141,7 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
     }
 #endif
 #if 1
+Vps_printf("\r\n### 9999999999999999999999 !!!\r\n");
     System_linkControl(SYSTEM_LINK_ID_IPU1_0,
                                 0xabcd0002,
                                 NULL,
@@ -228,7 +229,7 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
  *******************************************************************************
 */
 void chains_hal_single_cam_vpe_sad_StartApp(Chains_hal_single_cam_vpe_sadAppObj *pObj)
-{
+{Vps_printf("\r\n### 5 !!!\r\n");
     ChainsCommon_statCollectorReset();
     ChainsCommon_memPrintHeapStatus();
 

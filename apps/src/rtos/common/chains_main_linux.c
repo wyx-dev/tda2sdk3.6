@@ -47,10 +47,10 @@ Limited License.
 
  DISCLAIMER.
 
- THIS SOFTWARE IS PROVIDED BY TI AND TI’S LICENSORS "AS IS" AND ANY EXPRESS OR
+ THIS SOFTWARE IS PROVIDED BY TI AND TI?S LICENSORS "AS IS" AND ANY EXPRESS OR
  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- IN NO EVENT SHALL TI AND TI’S LICENSORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ IN NO EVENT SHALL TI AND TI?S LICENSORS BE LIABLE FOR ANY DIRECT, INDIRECT,
  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -87,10 +87,10 @@ Limited License.
 #include <ti/drv/vps/include/boards/bsp_board.h>
 
 #include <include/common/app_ctrl_radar.h>
-
+#include <src/hlos/adas/src/usecases/hal_imu/hal_imu_priv.h>
 #define APP_CTRL_TSK_PRI                   (4)
 #define APP_CTRL_TSK_STACK_SIZE            (16*1024)
-
+#define SYNC_TIMER_PERIOD                  (4)
 /**
  *******************************************************************************
  * \brief Link Specific Object
@@ -117,6 +117,11 @@ typedef struct {
 #pragma DATA_ALIGN(gAppCtrl_tskStack, 32)
 #pragma DATA_SECTION(gAppCtrl_tskStack, ".bss:taskStackSection")
 UInt8 gAppCtrl_tskStack[APP_CTRL_TSK_STACK_SIZE];
+extern Int32 g_chanNum;
+Int32 g_imuNum = 0;
+Int32 g_framerate = 20;
+Int32 g_sync_period = 6;
+
 
 /**
  *******************************************************************************
@@ -156,6 +161,22 @@ Void AppCtrl_setSystemL3DmmPri()
     Utils_setBWLimiter(UTILS_DMM_INITIATOR_ID_GPU_P2, 1300);
 }
 
+//add by hjb 
+BspOsal_ClockHandle clockHandle;
+
+static Int32 MultiSensorHwSync(){
+    BspOsal_clockStart(clockHandle);
+    Vps_printf("%s, AppCtrl task start Successed\n", __func__);
+
+    return 0;
+}
+static Int32 MultiSensorHwSyncStop(){
+    BspOsal_clockStop(clockHandle);
+    Vps_printf("%s, AppCtrl task stop Successed\n", __func__);
+
+    return 0;
+}
+
 static Int32 sensorStart(VideoSensorCreateAndStartAppPrm *pPrm)
 {
     UInt32 portId[VIDEO_SENSOR_MAX_LVDS_CAMERAS];
@@ -175,6 +196,30 @@ static Int32 sensorStart(VideoSensorCreateAndStartAppPrm *pPrm)
             status = ChainsCommon_StartCaptureDevice(pAppPrm->captureSrcId,1280,720);
         }
     }
+    else if (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_XC7027)
+    {
+        if(pAppPrm->isLVDSCaptMode)
+        {
+			Vps_printf("hubing: CHAINS: sensorStart pAppPrm->numLvdsCh=%d\n",pAppPrm->numLvdsCh);
+			ChainsCommon_MultiCam_StartCaptureDevice(pAppPrm->captureSrcId,portId,pAppPrm->numLvdsCh);
+        }
+        else
+        {
+            status = ChainsCommon_StartCaptureDevice(pAppPrm->captureSrcId,1280,720);
+        }
+    }
+    else if (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_OV490_OV10640)
+    {
+        if(pAppPrm->isLVDSCaptMode)
+        {
+			ChainsCommon_MultiCam_StartCaptureDevice(pAppPrm->captureSrcId,portId,pAppPrm->numLvdsCh);
+        }
+        else
+        {
+            status = ChainsCommon_StartCaptureDevice(pAppPrm->captureSrcId,1280,720);
+        }
+    }
+
     else if (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_UB964_OV1063X)
     {
         if(pAppPrm->isLVDSCaptMode)
@@ -220,9 +265,11 @@ static Int32 sensorStop(VideoSensorCreateAndStartAppPrm *pAppPrm)
 {
     Int32 status = SYSTEM_LINK_STATUS_SOK;
     if((pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_OV10635) ||
+       (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_XC7027) ||
        (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_UB964_OV1063X) ||
        (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_IMX290ISP)||
-       (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_OV490))
+       (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_OV490) ||
+       (pAppPrm->captureSrcId == CHAINS_CAPTURE_SRC_OV490_OV10640))
     {
         status = ChainsCommon_StopCaptureDevice(pAppPrm->captureSrcId);
     }
@@ -353,6 +400,7 @@ static void AppCtrl_parseAndSetDcc(AppCtrl_IssDccParams *pDccPrms)
 */
 Int32 AppCtrl_cmdHandler(AppCtrl_Obj * pObj, UInt32 cmd, Void * pPrm)
 {
+	static Int32 index[6] = {0};
     Int32 status = SYSTEM_LINK_STATUS_SOK;
 #if defined (BOARD_TYPE_TDA2XX_RVP)
     AppCtrl_BoardIds *boardIds;
@@ -362,10 +410,62 @@ Int32 AppCtrl_cmdHandler(AppCtrl_Obj * pObj, UInt32 cmd, Void * pPrm)
     {
         case APP_CTRL_LINK_CMD_VIDEO_SENSOR_CREATE_AND_START:
         {
+            /*
+               If EARLY_SRV is enabled then sensor init is complete as part of
+             app_init
+             */
             status = sensorStart(pPrm);
             break;
         }
 
+        case APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_START:
+        {
+        	Vps_printf("AppCtrl_cmdHandler: APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_START\n");
+            MultiSensorHwSync();
+            break;
+        }
+	case APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_STOP:
+        {
+        	Vps_printf("AppCtrl_cmdHandler: APP_CTRL_LINK_CMD_SYNC_TIMER_OUTPUT_STOP\n");
+            MultiSensorHwSyncStop();
+            break;
+        }
+        case APP_CTRL_LINK_CMD_SYNC_EXTEND_IO:
+        {
+            BspUtils_appSetExpIO(g_chanNum);
+			break;   
+        }
+		 case APP_CTRL_LINK_CMD_IMU_SET_NUM:
+        {
+            g_imuNum = *(Int32*)pPrm;
+			Vps_printf("cmdHandler g_imuNum =%d\n", g_imuNum);
+            break;   
+        }
+		case APP_CTRL_LINK_CMD_CAM_SET_FRAMERATE:
+        {
+            g_framerate = *(Int32*)pPrm;
+			g_sync_period = (1000/g_framerate/2)/SYNC_TIMER_PERIOD;
+			Vps_printf("cmdHandler g_framerate =%d, g_sync_period = %d\n", g_framerate,g_sync_period);
+            break;   
+        }
+		case APP_CTRL_LINK_CMD_IMU_GET_DATA:
+		{
+			UInt8 i = 0;
+			hal_imu_raw_data_t raw_data[IMU_CHANNEL_NUM_MAX];
+			for(i = 0; i < g_imuNum; i++)
+			{
+				//start = Utils_getCurGlobalTimeInUsec();
+				BspUtils_appReadBmi160(0x40+i, raw_data[i].data, IMU_RAW_DATA_MAX);
+				raw_data[i].time = Utils_getCurGlobalTimeInUsec();
+				raw_data[i].channel = i;
+				raw_data[i].index = index[i]++;
+				//Vps_printf("cmdHandler time=%lld, gap=%lld, channel=%d, index=%d, gyro_acc: 0x%04x, 0x%04x, 0x%04x\n", raw_data[i].time, raw_data[i].time-start, raw_data[i].channel, raw_data[i].index,
+				//		(int16_t)raw_data[i].data[1]<<8|raw_data[i].data[0], (int16_t)raw_data[i].data[3]<<8|raw_data[i].data[2], (int16_t)raw_data[i].data[5]<<8|raw_data[i].data[4]);
+			}
+			if(g_imuNum > 0)
+				System_linkControl(A15_0_LINK(SYSTEM_LINK_ID_NULL_1), SYSTEM_CMD_USER0, (UInt8*)(raw_data), sizeof(hal_imu_raw_data_t)*IMU_CHANNEL_NUM_MAX, TRUE);
+			break;
+		}
         case APP_CTRL_LINK_CMD_VIDEO_SENSOR_STOP_AND_DELETE:
         {
             VideoSensorCreateAndStartAppPrm *pAppPrm
@@ -497,6 +597,27 @@ Void AppCtrl_tskMain(struct Utils_TskHndl_t * pTsk, Utils_MsgHndl * pMsg)
     return;
 }
 
+
+void clockTestFunc(Uint32* arg){
+    static int countsync = 0;
+	static int countimu = 0;
+    AppCtrl_Obj *pObj = (AppCtrl_Obj*)arg;
+    Utils_MbxHndl *mbxHandle = (Utils_MbxHndl *)&pObj->tsk.mbx;
+
+	countsync++;
+	countimu++;
+	if(countsync==g_sync_period)
+	{
+	    Utils_mbxSendCmd(mbxHandle, APP_CTRL_LINK_CMD_SYNC_EXTEND_IO, NULL);
+		countsync = 0;
+	}
+	if(countimu == 3)
+	{
+	 	Utils_mbxSendCmd(mbxHandle, APP_CTRL_LINK_CMD_IMU_GET_DATA, NULL);
+		countimu = 0;
+	}
+}
+
 /**
  *******************************************************************************
  *
@@ -537,6 +658,17 @@ Int32 AppCtrl_init()
                              sizeof(gAppCtrl_tskStack), pObj, tskName,
                              UTILS_TSK_AFFINITY_CORE0);
     UTILS_assert(status == SYSTEM_LINK_STATUS_SOK);
+
+    Vps_printf("%s, AppCtrl task create Successed\n", __func__);
+
+    clockHandle = BspOsal_clockCreate(
+                            (BspOsal_ClockFuncPtr)clockTestFunc,
+                            SYNC_TIMER_PERIOD, //1000 is 1S
+                            FALSE,
+                            pObj
+                            );
+
+    Vps_printf("%s, AppCtrl task create Successed\n", __func__);
 
     return status;
 }

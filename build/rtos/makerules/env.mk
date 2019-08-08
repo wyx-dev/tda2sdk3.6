@@ -137,6 +137,9 @@ tiop_INCLUDE= $(tiop_PATH)/modules/ti_object_propagation/inc
 export tiop_INCLUDE
 
 dmautils_INCLUDE= $(dmautils_PATH)/inc
+dmautils_INCLUDE= $(dmautils_PATH)/inc \
+                  $(dmautils_PATH)/inc/edma_csl \
+                  $(dmautils_PATH)/inc/edma_utils
 export dmautils_INCLUDE
 
 # EVE SW
@@ -190,7 +193,8 @@ openvx_INCLUDE = $(OpenVX_PATH)/include $(OpenVX_PATH)/kernels/include
 export openvx_INCLUDE
 
 #VXLIB
-vxlib_INCLUDE = $(VXLIB_PATH)/packages
+vxlib_INCLUDE = $(VXLIB_PATH)/packages \
+                $(VXLIB_PATH)/packages/ti/vxlib
 export vxlib_INCLUDE
 
 # ADAM CAR
@@ -201,13 +205,15 @@ export adam_car_INCLUDE
 edma_INCLUDE = $(edma_PATH)/packages
 export edma_INCLUDE
 
-vlib_INCLUDE = $(vlib_PATH)/packages
+vlib_INCLUDE = $(vlib_PATH)/packages \
+               $(vlib_PATH)/packages/ti/vlib
 export vlib_INCLUDE
 
 mathlib_INCLUDE = $(mathlib_PATH)/packages
 export mathlib_INCLUDE
 
-dsplib_INCLUDE = $(dsplib_PATH)/packages
+dsplib_INCLUDE = $(dsplib_PATH)/packages \
+                 $(dsplib_PATH)/packages/ti/dsplib
 export dsplib_INCLUDE
 
 mmwavelib_INCLUDE = $(mmwavelib_PATH)/packages

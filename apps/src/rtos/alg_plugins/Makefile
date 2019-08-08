@@ -9,7 +9,7 @@ INCDIR = $(MODULE_SRC_BASE_PATH)/commonutils/
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = bios xdc ipc pdk vision_sdk fc xdais jpegvdec \
-								jpegvenc edma vlib lane_detect object_detect \
+								jpegvenc edma vlib vxlib dsplib lane_detect object_detect \
 								scene_obstruction_detect object_classification \
 								evealg stereo_postprocess gpe sfm clr fcw tidl dmautils \
 								tiop links_fw links_fw_rtos

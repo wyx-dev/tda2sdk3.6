@@ -62,6 +62,8 @@ APP_LIBS_c66xdsp_1 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib.ae66
 APP_LIBS_c66xdsp_1 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib_bamplugin.ae66
 APP_LIBS_c66xdsp_2 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib.ae66
 APP_LIBS_c66xdsp_2 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib_bamplugin.ae66
+APP_LIBS_c66xdsp_1 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib_cn.ae66
+APP_LIBS_c66xdsp_2 += $(VXLIB_PATH)/packages/ti/vxlib/lib/vxlib_cn.ae66
 endif
 
 

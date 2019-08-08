@@ -152,12 +152,15 @@ static Int32 tidlAlgMemAlloc(AlgorithmLink_tidlObj *pAlgObj)
                 break;
 
             case IALG_DARAM0:
-                /* on EVE it is DMEM */
-                pAlgObj->memRec[cnt].base = Utils_memAlloc(
-                                                UTILS_HEAPID_L2_LOCAL,
-                                                pAlgObj->memRec[cnt].size,
-                                                pAlgObj->memRec[cnt].alignment);
-                UTILS_assert(NULL != pAlgObj->memRec[cnt].base);
+                if(pAlgObj->memRec[cnt].size <= 1280)
+                {
+                    /* on EVE it is DMEM */
+                    pAlgObj->memRec[cnt].base = (void *)(0x40020000);
+                }
+                else
+                {
+                    pAlgObj->memRec[cnt].base = (void *)(0x40020000 + 0x500);
+                }
                 break;
 
             case IALG_DARAM1:
@@ -232,10 +235,10 @@ static Int32 tidlAlgMemFree(AlgorithmLink_tidlObj *pAlgObj)
                 break;
 
             case IALG_DARAM0:
-                Utils_memFree(
-                    UTILS_HEAPID_L2_LOCAL,
-                    pAlgObj->memRec[cnt].base,
-                    pAlgObj->memRec[cnt].size);
+                //Utils_memFree(
+                //    UTILS_HEAPID_L2_LOCAL,
+                //    pAlgObj->memRec[cnt].base,
+                //    pAlgObj->memRec[cnt].size);
                 break;
 
             case IALG_DARAM1:
@@ -466,7 +469,6 @@ static UInt32 tidlGetNumOutputBuffers(
 {
     Int32 i, j;
     UInt16 numBuffs = 0;
-    UInt16 tidlMaxPad = TIDL_MAX_PAD_SIZE;
 
     for(i = 0; i < net->numLayers; i++)
     {
@@ -481,10 +483,12 @@ static UInt32 tidlGetNumOutputBuffers(
                     BufDescList[numBuffs].bufPlanes[0].frameROI.topLeft.y = 0;
 
                     BufDescList[numBuffs].bufPlanes[0].width = \
-                            net->TIDLLayers[i].outData[j].dimValues[3] + (2 * tidlMaxPad);
+                            net->TIDLLayers[i].outData[j].pitch[TIDL_LINE_PITCH];
                     BufDescList[numBuffs].bufPlanes[0].height = \
+                            net->TIDLLayers[i].outData[j].dimValues[0]* \
                             net->TIDLLayers[i].outData[j].dimValues[1] * \
-                                (net->TIDLLayers[i].outData[j].dimValues[2] + (2 * tidlMaxPad));
+                            (net->TIDLLayers[i].outData[j].pitch[TIDL_CHANNEL_PITCH]/
+                             net->TIDLLayers[i].outData[j].pitch[TIDL_LINE_PITCH]);
                     BufDescList[numBuffs].bufPlanes[0].frameROI.width = net->TIDLLayers[i].outData[j].dimValues[3];
                     BufDescList[numBuffs].bufPlanes[0].frameROI.height = net->TIDLLayers[i].outData[j].dimValues[2];
                     BufDescList[numBuffs].bufferId = net->TIDLLayers[i].outData[j].dataId;
@@ -560,8 +564,8 @@ static Int32 tidlCreateAlgInstance(AlgorithmLink_tidlObj *pAlgObj)
 #endif
     pAlgCreateParams->l3MemSize = TIDL_LINK_MIN_L3_SIZE;
 
-    pAlgCreateParams->quantHistoryParam1   = 20;
-    pAlgCreateParams->quantHistoryParam2   = 5;
+//    pAlgCreateParams->quantHistoryParam1   = 20;
+//    pAlgCreateParams->quantHistoryParam2   = 5;
     pAlgCreateParams->quantMargin          = 0;
     pAlgCreateParams->optimiseExtMem       = TIDL_optimiseExtMemL1;
     pAlgCreateParams->net.interElementSize = 4;

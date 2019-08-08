@@ -1,0 +1,7 @@
+UseCase: chains_hal_match_template
+
+NullSource (A15) -> Alg_MatchTemplate (DSP1) -> Null (A15)
+
+
+
+

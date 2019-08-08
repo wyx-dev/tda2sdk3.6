@@ -108,7 +108,7 @@ DSP2_DATA_SIZE              =  14*MB;
  * MUST be a multiple of MB
  */
 REMOTE_LOG_SIZE             =  256*KB;
-SYSTEM_IPC_SHM_SIZE         =  512*KB;
+SYSTEM_IPC_SHM_SIZE         =  1024*KB;
 SYSTEM_AUTOSAR_IPC_SHM_SIZE =  512*KB;
 LINK_STATS_SIZE             =  512*KB;
 HDVPSS_DESC_SIZE            = 1024*KB;

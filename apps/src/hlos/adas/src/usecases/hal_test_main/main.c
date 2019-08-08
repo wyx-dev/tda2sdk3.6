@@ -297,7 +297,9 @@ void camera_run(void)
 int main (int argc, char ** argv)
 {
 	hal_arch_init();
+	printf("\r\n### main ### start ERROR !!!\r\n");
 	camera_run();
+	printf("\r\n### main ### end ERROR !!!\r\n");
 	hal_arch_deinit();
 
 	return 0;

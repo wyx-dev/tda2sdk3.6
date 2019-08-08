@@ -1,0 +1,25 @@
+digraph chains_hal_modl {
+
+       ColorScheme [shape=none, margin=0, label=<
+       <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">
+       <TR><TD bgcolor="yellow">EVE1</TD></TR>
+       <TR><TD bgcolor="lightsalmon">A15</TD></TR>
+       </TABLE>>];
+
+       /************** LINKS ************************/
+       NullSource [color=lightsalmon, style=filled]
+       IPCOut_A15_0_EVE1_0 [color=lightsalmon, style=filled]
+       IPCIn_EVE1_A15_0_0 [color=yellow, style=filled]
+       Alg_tidl [color=yellow, style=filled]
+       IPCOut_EVE1_A15_0_0 [color=yellow, style=filled]
+       IPCIn_A15_0_EVE1_0 [color=lightsalmon, style=filled]
+       Null [color=lightsalmon, style=filled]
+
+       /************** CONNECTIONS ************************/
+       Alg_tidl -> IPCOut_EVE1_A15_0_0
+       NullSource -> IPCOut_A15_0_EVE1_0
+       IPCOut_A15_0_EVE1_0 -> IPCIn_EVE1_A15_0_0
+       IPCIn_EVE1_A15_0_0 -> Alg_tidl
+       IPCOut_EVE1_A15_0_0 -> IPCIn_A15_0_EVE1_0
+       IPCIn_A15_0_EVE1_0 -> Null
+}

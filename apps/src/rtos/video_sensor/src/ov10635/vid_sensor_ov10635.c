@@ -90,6 +90,7 @@ Limited License.
 #include <src/rtos/utils_common/include/utils_mem.h>
 
 
+Int32 g_chanNum = 1;
 
 /**
  *******************************************************************************
@@ -156,6 +157,14 @@ Int32 VidSensor_create(VidSensor_CreateParams *createParams,
     {
         sensorDrvId = FVID2_VID_SENSOR_OV1063X_DRV;
     }
+    else if(createParams->sensorId==VID_SENSOR_XC7027)
+    {
+        sensorDrvId = FVID2_VID_SENSOR_XC7027_OV2718_DRV;
+    }
+	else if(createParams->sensorId==VID_SENSOR_OV490_OV10640)
+    {
+        sensorDrvId = FVID2_VID_SENSOR_OV490_OV10640_DRV;
+    }
     else if(createParams->sensorId==VID_SENSOR_MT9M024)
     {
         sensorDrvId = BSP_VID_SENSOR_MT9M024;
@@ -215,7 +224,7 @@ Int32 VidSensor_create(VidSensor_CreateParams *createParams,
         Vps_printf(" VIDEO_SENSOR: Detected %d Camera modules !!!\n",
                         ub964Status.numDetected);
     }
-
+	g_chanNum = createParams->numChan;
     for(chanNum = 0 ; ((chanNum < createParams->numChan) &&
                        (SYSTEM_LINK_STATUS_SOK == retVal)) ;chanNum++)
     {
@@ -312,7 +321,11 @@ Int32 VidSensor_create(VidSensor_CreateParams *createParams,
             {
                 if (Bsp_boardIsTda2xxRvp() || 
                     ((BSP_BOARD_MULTIDES == Bsp_boardGetId()) &&
-                    (FVID2_VID_SENSOR_MULDES_OV1063X_DRV == sensorDrvId)))
+                    (FVID2_VID_SENSOR_MULDES_OV1063X_DRV == sensorDrvId)) ||
+                    ((BSP_BOARD_MULTIDES == Bsp_boardGetId()) &&
+                    (FVID2_VID_SENSOR_XC7027_OV2718_DRV == sensorDrvId))  ||
+                    ((BSP_BOARD_MULTIDES == Bsp_boardGetId()) &&
+                    (FVID2_VID_SENSOR_OV490_OV10640_DRV == sensorDrvId)))         
                 {
                     retVal = BspUtils_appConfSerDeSer(sensorDrvId, sensorInstId);
                     if (retVal != SYSTEM_LINK_STATUS_SOK)
@@ -465,6 +478,14 @@ Int32 VidSensor_delete(VidSensor_CreateParams *createParams,
         )
     {
         sensorDrvId = FVID2_VID_SENSOR_OV1063X_DRV;
+    }
+    else if(createParams->sensorId==VID_SENSOR_XC7027)
+    {
+        sensorDrvId = FVID2_VID_SENSOR_XC7027_OV2718_DRV;
+    }
+	else if(createParams->sensorId==VID_SENSOR_OV490_OV10640)
+    {
+        sensorDrvId = FVID2_VID_SENSOR_OV490_OV10640_DRV;
     }
     else if(createParams->sensorId==VID_SENSOR_MT9M024)
     {

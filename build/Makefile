@@ -86,10 +86,24 @@ apps_hlos:
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_offline_feed_cam_vpe_sad MODNAME=hal_offline_feed_cam_vpe_sad CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_can MODNAME=hal_can CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_can MODNAME=hal_can CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_sonar MODNAME=hal_sonar CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_sonar MODNAME=hal_sonar CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_arch MODNAME=hal_arch CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_arch MODNAME=hal_arch CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_warp_affine MODNAME=hal_warp_affine CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_warp_affine MODNAME=hal_warp_affine CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_match_template MODNAME=hal_match_template CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_match_template MODNAME=hal_match_template CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_match_template_classic MODNAME=hal_match_template_classic CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_match_template_classic MODNAME=hal_match_template_classic CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_sparse_optical_flow MODNAME=hal_sparse_optical_flow CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_sparse_optical_flow MODNAME=hal_sparse_optical_flow CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_modl MODNAME=hal_modl CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_modl MODNAME=hal_modl CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_imu MODNAME=hal_imu CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_imu MODNAME=hal_imu CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_system MODNAME=hal_system CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_system MODNAME=hal_system CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 lib
 ifeq ($(HAL), hal)

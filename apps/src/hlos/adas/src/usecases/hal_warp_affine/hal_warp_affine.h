@@ -1,0 +1,328 @@
+/******************************************************************************
+*
+* Copyright (C) 2019-2020 Momenta Incorporated - https://www.momenta.ai/
+*
+* ALL RIGHTS RESERVED
+*
+******************************************************************************/
+
+/**
+----------------------------------------------------------------------------
+@file    hal_warp_affine.h
+@brief     This file defines the interface for using MOMENTA
+           Warp Affine algorithm.
+@version 0.1 (Feb 2019) : Initial Code
+----------------------------------------------------------------------------
+*/
+
+#ifndef _HAL_WARP_AFFINE_H_
+#define _HAL_WARP_AFFINE_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+/**
+*  @brief The handle for the Warp Affine algorithm
+*/
+typedef unsigned int hal_warp_affine_handle_t;
+
+/**
+*  @brief The return status of the API.
+*/
+#define HAL_WA_OK              (0)
+#define HAL_WA_EFAIL           (-1)
+#define HAL_WA_ETIMEOUT        (-2)
+#define HAL_WA_EALLOC          (-3)
+#define HAL_WA_EBUSY           (-4)
+#define HAL_WA_EINVALID_PARAMS (-5)
+
+/**
+*  @struct HAL_WA_OutputBuffer
+*  @brief  This structure contains all the MOMENTA Warp Affine
+*          output data parameters.
+*  @param  size
+*          output buffer size
+*  @param  data
+*          MOMENTA Warp Affine output buffer
+*/
+typedef struct {
+    unsigned int size;
+    unsigned char *data;
+} HAL_WA_OutputBuffer;
+
+/**
+*  @enum    eHAL_WA_PROC_ID
+*  @brief   This enumerator defines
+*           the Process ID of MOMENTA Warp Affine.
+*/
+typedef enum {
+    HAL_WA_PROC_ID_DSP1_INST0 = 0,
+    HAL_WA_PROC_ID_DSP1_INST1 = 1,
+    HAL_WA_PROC_ID_DSP2_INST0 = 2,
+    HAL_WA_PROC_ID_DSP2_INST1 = 3,
+    HAL_WA_PROC_ID_MAX
+} eHAL_WA_PROC_ID;
+
+/**
+*  @enum    eHAL_WA_PROC_STATUS
+*  @brief   This enumerator defines
+*           the status of the Process.
+*/
+typedef enum {
+    HAL_WA_PROC_STATUS_IDLE = 0,
+    HAL_WA_PROC_STATUS_BUSY = 1,
+    HAL_WA_PROC_STATUS_MAX
+} eHAL_WA_PROC_STATUS;
+
+/**
+*  @brief      Call back for handling MOMENTA Warp Affine output data.
+*
+*  @param[in]  handle    the handle for the Warp Affine algorithm
+*  @param[in]  output    The MOMENTA Warp Affine output buffer
+*
+*  @retval     NONE
+*
+*/
+typedef void (*hal_warp_affine_output_cb)(
+    hal_warp_affine_handle_t handle,
+    HAL_WA_OutputBuffer *output
+    );
+
+/**
+*  @struct HAL_WA_CreateParams
+*  @brief  This structure contains all the parameters
+*          which MOMENTA Warp Affine needs at thread level init time.
+*  @param  handle
+*          Call back for handling MOMENTA Warp Affine output data
+*/
+typedef struct {
+    hal_warp_affine_output_cb handle;
+} HAL_WA_CreateParams;
+
+/**
+*  @enum    eHAL_WA_TYPE
+*  @brief   This enumerator defines Warp Affine Type.
+*/
+typedef enum {
+    HAL_WA_TYPE_BILINEAR = 0,
+    HAL_WA_TYPE_NEAREST = 1,
+    HAL_WA_TYPE_MAX
+} eHAL_WA_TYPE;
+
+/**
+*  @struct HAL_WA_WarpMatrix
+*  @brief  This structure contains all the parameters
+*          which warp affine algorithm needs at runtime.
+*  @param  type
+*          warp affine type
+*  @param  channel
+*          channel number
+*  @param  number
+*          warp affine matrix/output number (1 - 20)
+*  @param  src_dim_x
+*          dimensional information of src - Width of buffer in X dimension
+*  @param  src_dim_y
+*          dimensional information of src - Height of buffer in Y dimension
+*  @param  src_stride_y
+*          dimensional information of src - Stride in Y dimension in bytes
+*  @param  dst_dim_x
+*          dimensional information of dst - Width of buffer in X dimension
+*  @param  dst_dim_y
+*          dimensional information of dst - Height of buffer in Y dimension
+*  @param  dst_stride_y
+*          dimensional information of dst - Stride in Y dimension in bytes
+*  @param  warpMatrix
+*          Array containing the affine coefficients
+*  @param  srcOffsetX
+*          X offset of src pointer relative to start of valid data in broader image
+*  @param  srcOffsetY
+*          Y offset of src pointer relative to start of valid data in broader image
+*  @param  dstOffsetX
+*          X offset of dst pointer relative to start of output valid data in broader image
+*  @param  dstOffsetY
+*          Y offset of dst pointer relative to start of output valid data in broader image
+*/
+typedef struct {
+    unsigned int type;
+    unsigned int channel;
+    unsigned int number;
+    unsigned int src_dim_x;
+    unsigned int src_dim_y;
+    unsigned int src_stride_y;
+    unsigned int dst_dim_x;
+    unsigned int dst_dim_y;
+    unsigned int dst_stride_y;
+    float warpMatrix[20][6];
+    short srcOffsetX;
+    short srcOffsetY;
+    short dstOffsetX;
+    short dstOffsetY;
+} HAL_WA_WarpMatrix;
+
+/**
+*  @brief      Initialize MOMENTA Warp Affine.
+*
+*  @param[in]  NONE
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*/
+int hal_warp_affine_init_process_level(void);
+
+/**
+*  @brief      Create MOMENTA Warp Affine instance.
+*              MOMENTA Warp Affine Links and Chains framework is started.
+*
+*  @param[out] handle          the handle for MOMENTA Warp Affine
+*  @param[in]  inst_id         the id of the instance
+*  @param[in]  init_prm        init parameters
+*  @param[in]  prm_size        parameters size
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*/
+int hal_warp_affine_init_thread_level(
+    hal_warp_affine_handle_t *handle,
+    unsigned int inst_id,
+    void *init_prm,
+    unsigned int prm_size
+    );
+
+/**
+*  @brief      Deinitialize MOMENTA Warp Affine.
+*
+*  @param[in]  NONE
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*/
+int hal_warp_affine_deinit_process_level(void);
+
+/**
+*  @brief      Destroy MOMENTA Warp Affine instance.
+*              MOMENTA Warp Affine Links and Chains framework is deleted.
+*
+*  @param[in]  handle  the handle for MOMENTA Warp Affine
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*/
+int hal_warp_affine_deinit_thread_level(
+    hal_warp_affine_handle_t handle
+    );
+
+/**
+*  @brief      Malloc continuous aligned physical memory
+*
+*  @param[out] data  Allocated memory
+*  @param[in]  size  Memory size
+*  @param[in]  align Align bytes value
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*  @remarks
+*   param[out] *data has been converted to virtual address.
+*
+*/
+int hal_warp_affine_malloc_continuous_aligned(
+    void **data,
+    unsigned int size,
+    unsigned int align
+    );
+
+/**
+*  @brief      Cache wb
+*
+*  @param[out] data  wb cache
+*  @param[in]  size  wb size
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*/
+int hal_warp_affine_cache_wb(
+    void *data,
+    unsigned int size
+    );
+
+/**
+*  @brief      Free continuous aligned physical memory
+*
+*  @param[in]  data  Allocated memory
+*  @param[in]  size  Memory size
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*  @remarks
+*   param[in] data should be virtual address.
+*
+*/
+int hal_warp_affine_free_continuous_aligned(
+    void *data,
+    unsigned int size
+    );
+
+/**
+*  @brief      virtual memory address to physical memory address
+*
+*  @param[in]  virt_addr  virtual memory address
+*
+*  @retval     physical memory address
+*
+*  @remarks
+*
+*/
+unsigned int hal_warp_affine_virt2phys(
+    void *virt_addr
+    );
+
+/**
+*  @brief      Pass new data to MOMENTA Warp Affine.
+*
+*  @param[in]  handle  the handle for the Warp Affine algorithm
+*  @param[in]  data    the new data to be processed.
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*  @remarks
+*   Please malloc continuous aligned physical memory for
+*   param[in] data by hal_warp_affine_malloc_continuous_aligned.
+*
+*  @remarks
+*   Do not release or modify param[in] data until get the output buffer.
+*
+*/
+int hal_warp_affine_put_input_buffer(
+    hal_warp_affine_handle_t handle,
+    void *data
+    );
+
+/**
+*  @brief      Wait until output buffer is ready
+*
+*  @param[in]  handle    the handle for the Warp Affine algorithm
+*
+*  @retval     0 : success
+*  @retval     others : failed
+*
+*  @remarks
+*   When output buffer is ready hal_warp_affine_output_cb will be called.
+*
+*/
+int hal_warp_affine_wait_output_buffer(
+    hal_warp_affine_handle_t handle
+    );
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#endif //_HAL_WARP_AFFINE_H_

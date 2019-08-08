@@ -108,8 +108,20 @@ Limited License.
 #ifdef ALG_objectdetection
     Int32 AlgorithmLink_ObjectClassification_initPlugin(void);
 #endif
+#ifdef ALG_warpaffine
+    Int32 AlgorithmLink_warpAffine_initPlugin(void);
+#endif
+#ifdef ALG_matchtemplate
+    Int32 AlgorithmLink_matchTemplate_initPlugin(void);
+#endif
+#ifdef ALG_matchtemplateclassic
+    Int32 AlgorithmLink_matchTemplateClassic_initPlugin(void);
+#endif
 #ifdef ALG_denseopticalflow
     Int32 AlgorithmLink_vectorToImage_initPlugin(void);
+#endif
+#ifdef ALG_sparseopticalflow
+    Int32 AlgorithmLink_sparseOpticalFlow_initPlugin(void);
 #endif
 #ifdef ALG_structurefrommotion
     Int32 AlgorithmLink_sfmLinearTwoView_initPlugin(void);
@@ -207,8 +219,20 @@ void App_init(void)
 #ifdef ALG_objectdetection
     AlgorithmLink_ObjectClassification_initPlugin();
 #endif
+#ifdef ALG_warpaffine
+    AlgorithmLink_warpAffine_initPlugin();
+#endif
+#ifdef ALG_matchtemplate
+    AlgorithmLink_matchTemplate_initPlugin();
+#endif
+#ifdef ALG_matchtemplateclassic
+    AlgorithmLink_matchTemplateClassic_initPlugin();
+#endif
 #ifdef ALG_denseopticalflow
     AlgorithmLink_vectorToImage_initPlugin();
+#endif
+#ifdef ALG_sparseopticalflow
+    AlgorithmLink_sparseOpticalFlow_initPlugin();
 #endif
 #ifdef ALG_structurefrommotion
     AlgorithmLink_sfmLinearTwoView_initPlugin();

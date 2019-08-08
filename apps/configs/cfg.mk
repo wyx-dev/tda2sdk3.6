@@ -20,6 +20,16 @@ export CHECK_YES
 
 include $($(MAKEAPPNAME)_PATH)/configs/$(MAKECONFIG)/cfg.mk
 
+ALG_warpaffine = yes
+export ALG_warpaffine
+ALG_matchtemplate = yes
+export ALG_matchtemplate
+ALG_matchtemplateclassic = yes
+export ALG_matchtemplateclassic
+ALG_tidl=yes
+export ALG_tidl
+
+
 ALG_LIST = \
    ALG_autocalibration  \
    ALG_autoremap \
@@ -43,7 +53,6 @@ ALG_LIST = \
    ALG_sceneobstruction \
    ALG_sfm \
    ALG_softisp \
-   ALG_sparseopticalflow \
    ALG_stereo_postprocessing \
    ALG_structurefrommotion \
    ALG_subframecopy \
@@ -57,6 +66,9 @@ ALG_LIST = \
    ALG_rvcDiags \
    ALG_stereo_app \
    ALG_openvx \
+   ALG_warpaffine \
+   ALG_matchtemplate \
+   ALG_matchtemplateclassic \
    ALG_tidl \
    ALG_tiop \
 

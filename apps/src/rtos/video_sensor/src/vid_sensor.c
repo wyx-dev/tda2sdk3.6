@@ -182,6 +182,154 @@ static Void ChainsCommon_SetVidSensorMultiOV10635Prms(
             sizeof(pPrm->vipInstId));
 }
 
+static Void ChainsCommon_SetVidSensorXC7027Prms(
+                                    VidSensor_CreateParams *pPrm,
+                                    UInt32 portId[],
+                                    UInt32 numCh
+                                    )
+{
+#if 0
+    pPrm->sensorId      = VID_SENSOR_XC7027;
+    pPrm->vipInstId[0]     = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+#ifdef TDA2EX_BUILD
+   //This change is done to support tda2ex VIP1_SLICE2_PORTA
+    pPrm->vipInstId[0]     = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+#endif
+#ifdef BOARD_TYPE_TDA2XX_RVP
+    pPrm->vipInstId[0]     = SYSTEM_CAPTURE_INST_VIP2_SLICE1_PORTA;
+#endif
+    pPrm->standard      = SYSTEM_STD_720P_60;
+    pPrm->dataformat    = SYSTEM_DF_YUV422I_UYVY;
+    pPrm->videoIfWidth  = SYSTEM_VIFW_8BIT;
+    pPrm->fps           = SYSTEM_FPS_30;
+    pPrm->numChan       = numCh;
+    if(numCh > 1)
+    {
+        pPrm->isLVDSCaptMode = TRUE;
+    }
+    else
+    {
+        pPrm->isLVDSCaptMode = FALSE;
+    }
+#else
+	pPrm->sensorId		= VID_SENSOR_XC7027;
+	pPrm->standard		= SYSTEM_STD_720P_60;
+	pPrm->dataformat	= SYSTEM_DF_YUV422I_UYVY;
+	pPrm->videoIfWidth	= SYSTEM_VIFW_8BIT;
+	pPrm->fps			= SYSTEM_FPS_30;
+	pPrm->isLVDSCaptMode = TRUE;
+	pPrm->numChan		= numCh;
+    Vps_printf("hubing: CHAINS: ChainsCommon_SetVidSensorXC7027Prms pPrm->numChan=%d, numCh=%d\n",pPrm->numChan, numCh);
+
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP2_SLICE1_PORTA;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP3_SLICE1_PORTA;
+	pPrm->vipInstId[4] = SYSTEM_CAPTURE_INST_VIP3_SLICE2_PORTA;
+	pPrm->vipInstId[5] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTB;
+
+#ifdef TDA2PX_BUILD
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+#endif
+
+
+#ifdef TDA2EX_BUILD
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+#endif
+
+#ifdef BOARD_TYPE_TDA2XX_RVP
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP2_SLICE1_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP3_SLICE2_PORTA;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP3_SLICE1_PORTA;
+	pPrm->vipInstId[4] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[5] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[6] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+	pPrm->vipInstId[7] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTB;
+#endif
+
+	if(Bsp_platformIsTda3xxFamilyBuild())
+	{
+		pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+		pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+		pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+		pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+	}
+	/* copy VIP inst ID to portId[] so that this can be during setting up
+	 * of VIP capture parameters
+	 */
+	UTILS_assert(portId != NULL);
+	memcpy(portId,
+			pPrm->vipInstId,
+			sizeof(pPrm->vipInstId));
+
+#endif
+}
+
+static Void ChainsCommon_SetVidSensorOV490_OV10640Prms(
+	VidSensor_CreateParams *pPrm,
+	UInt32 portId[],
+	UInt32 numCh
+)
+{
+	pPrm->sensorId		= VID_SENSOR_OV490_OV10640;
+	pPrm->standard		= SYSTEM_STD_720P_60;
+	pPrm->dataformat	= SYSTEM_DF_YUV422I_UYVY;
+	pPrm->videoIfWidth	= SYSTEM_VIFW_8BIT;
+	pPrm->fps			= SYSTEM_FPS_30;
+	pPrm->isLVDSCaptMode = TRUE;
+	pPrm->numChan		= numCh;
+    Vps_printf("hubing: CHAINS: ChainsCommon_SetVidSensorOV490_OV10640Prms pPrm->numChan=%d, numCh=%d\n",pPrm->numChan, numCh);
+
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP2_SLICE1_PORTA;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP3_SLICE1_PORTA;
+	pPrm->vipInstId[4] = SYSTEM_CAPTURE_INST_VIP3_SLICE2_PORTA;
+	pPrm->vipInstId[5] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTB;
+
+#ifdef TDA2PX_BUILD
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+#endif
+
+
+#ifdef TDA2EX_BUILD
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+#endif
+
+#ifdef BOARD_TYPE_TDA2XX_RVP
+	pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP2_SLICE1_PORTA;
+	pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTA;
+	pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP3_SLICE2_PORTA;
+	pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP3_SLICE1_PORTA;
+	pPrm->vipInstId[4] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+	pPrm->vipInstId[5] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+	pPrm->vipInstId[6] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+	pPrm->vipInstId[7] = SYSTEM_CAPTURE_INST_VIP2_SLICE2_PORTB;
+#endif
+
+	if(Bsp_platformIsTda3xxFamilyBuild())
+	{
+		pPrm->vipInstId[0] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTA;
+		pPrm->vipInstId[1] = SYSTEM_CAPTURE_INST_VIP1_SLICE1_PORTB;
+		pPrm->vipInstId[2] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
+		pPrm->vipInstId[3] = SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTB;
+	}
+	/* copy VIP inst ID to portId[] so that this can be during setting up
+	 * of VIP capture parameters
+	 */
+	UTILS_assert(portId != NULL);
+	memcpy(portId,
+			pPrm->vipInstId,
+			sizeof(pPrm->vipInstId));
+
+}
 static Void ChainsCommon_SetVidSensorOV10635Prms(
                                     VidSensor_CreateParams *pPrm,
                                     UInt32 portId[],
@@ -316,6 +464,14 @@ static Void ChainsCommon_SetVidSensorPrms(
     if(sensorId==VID_SENSOR_OV10635)
     {
         ChainsCommon_SetVidSensorOV10635Prms(pPrm,portId,numCh);
+    }
+    else if(sensorId==VID_SENSOR_MULDES_XC7027)
+    {
+        ChainsCommon_SetVidSensorXC7027Prms(pPrm,portId,numCh);
+    }
+	else if(sensorId==VID_SENSOR_MULDES_OV490_OV10640)
+    {
+        ChainsCommon_SetVidSensorOV490_OV10640Prms(pPrm,portId,numCh);
     }
     else if(sensorId==VID_SENSOR_MULDES_OV1063X)
     {
@@ -575,6 +731,23 @@ Int32 ChainsCommon_MultiCam_StartCaptureDevice( Chains_CaptureSrc captureSrc,
                 portId,
                 numLvdsCh,
                 captureSrc);
+    }else if(captureSrc==CHAINS_CAPTURE_SRC_XC7027)
+    {
+        ChainsCommon_SetVidSensorPrms(
+                &gvidSensorObj.vidSensorPrm,
+                VID_SENSOR_MULDES_XC7027,
+                portId,
+                numLvdsCh,
+                captureSrc);
+    }
+	else if(captureSrc==CHAINS_CAPTURE_SRC_OV490_OV10640)
+    {
+        ChainsCommon_SetVidSensorPrms(
+                &gvidSensorObj.vidSensorPrm,
+                VID_SENSOR_MULDES_OV490_OV10640,
+                portId,
+                numLvdsCh,
+                captureSrc);
     }
     else if(captureSrc == CHAINS_CAPTURE_SRC_OV490)
     {
@@ -637,10 +810,12 @@ Int32 ChainsCommon_StopCaptureDevice(Chains_CaptureSrc captureSrc)
 
 Vps_printf(" Stop sensor ChainsCommon_StopCaptureDevice \n");
     if(captureSrc == CHAINS_CAPTURE_SRC_OV10635 ||
+       captureSrc == CHAINS_CAPTURE_SRC_XC7027 || 
        captureSrc == CHAINS_CAPTURE_SRC_OV10635_LVDS ||
        captureSrc == CHAINS_CAPTURE_SRC_UB964_OV1063X ||
        captureSrc == CHAINS_CAPTURE_SRC_IMX290ISP ||
-       captureSrc == CHAINS_CAPTURE_SRC_OV490)
+       captureSrc == CHAINS_CAPTURE_SRC_OV490 ||
+       captureSrc == CHAINS_CAPTURE_SRC_OV490_OV10640)
     {
         VidSensor_control(&gvidSensorObj.vidSensorPrm,
                                     VID_SENSOR_CMD_STOP,

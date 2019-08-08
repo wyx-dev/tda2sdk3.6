@@ -227,7 +227,9 @@ Void ChainsCommon_SingleCam_SetCapturePrms(
         pInstPrm->vipInstId     =   SYSTEM_CAPTURE_INST_VIP1_SLICE2_PORTA;
 #endif
         if( (captureSrc == CHAINS_CAPTURE_SRC_OV10635) ||
-            (captureSrc == CHAINS_CAPTURE_SRC_OV10635_LVDS) )
+			(captureSrc == CHAINS_CAPTURE_SRC_XC7027) ||
+            (captureSrc == CHAINS_CAPTURE_SRC_OV10635_LVDS) ||
+            (captureSrc == CHAINS_CAPTURE_SRC_OV490_OV10640))
         {
             pInstPrm->videoIfMode   =   SYSTEM_VIFM_SCH_DS_HSYNC_VSYNC;
             pInstPrm->videoIfWidth  =   SYSTEM_VIFW_8BIT;
