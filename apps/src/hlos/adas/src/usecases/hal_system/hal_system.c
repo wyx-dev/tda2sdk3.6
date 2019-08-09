@@ -308,4 +308,106 @@ void hal_system_print_statistics_collector(void)
 	ChainsCommon_statCollectorPrint();
 }
 
+/**
+ *******************************************************************************
+ *
+ * \brief   Load Calculation enable/disable
+ *
+ *          This functions enables load profiling. A control command
+ *          SYSTEM_COMMON_CMD_CPU_LOAD_CALC_START is passed to chianed links.
+ *          If parameter Enable is set true Load profiling is enabled.
+ *          If printStatus is set true a System CMD to Print CPU load,
+ *          Task Laod and Heap status information is sent
+ *          While creating enable = TRUE , printStatus & printTskLoad = FALSE
+ *          While deleting enable = FALSE , printStatus & printTskLoad = TRUE
+ *
+ * \param   enable               [IN]   is set true Load profiling
+ *
+ * \param   printStatus          [IN] true a System CMD
+ *
+ * \param   printTskLoad         [IN]  true a Print CPU load
+ *
+ *
+ * \return  SYSTEM_LINK_STATUS_SOK on success
+ *******************************************************************************
+*/
+void Chains_prfLoadCalcEnable(Bool enable, Bool printStatus, Bool printTskLoad)
+{
+    UInt32 procId, linkId;
 
+
+    for(procId=0; procId<SYSTEM_PROC_MAX; procId++)
+    {
+        if(System_isProcEnabled(procId)==FALSE)
+            continue;
+
+        linkId = SYSTEM_MAKE_LINK_ID(procId, SYSTEM_LINK_ID_PROCK_LINK_ID);
+
+        if(enable)
+        {
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_START,
+                NULL,
+                0,
+                TRUE
+            );
+        }
+        else
+        {
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_STOP,
+                NULL,
+                0,
+                TRUE
+            );
+            if(printStatus)
+            {
+                SystemCommon_PrintStatus printStatus;
+
+                memset(&printStatus, 0, sizeof(printStatus));
+
+                printStatus.printCpuLoad = TRUE;
+                printStatus.printTskLoad = printTskLoad;
+                System_linkControl(
+                    linkId,
+                    SYSTEM_COMMON_CMD_PRINT_STATUS,
+                    &printStatus,
+                    sizeof(printStatus),
+                    TRUE
+                );
+                Task_sleep(100);
+            }
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_RESET,
+                NULL,
+                0,
+                TRUE
+            );
+        }
+    }
+}
+
+void hal_system_print_proc_load_over_period(int waittime)
+{
+	Chains_prfLoadCalcEnable(TRUE, FALSE, FALSE);	
+	if(waittime < 500000) {
+		waittime = 500000;
+	}
+	Vps_printf(" Waiting %d us for CPU load perf to Complete !!!!\n", waittime);
+	Task_sleep(waittime);
+	Vps_printf(" CPU load calculation to Complete !!!!\n");
+	Chains_prfLoadCalcEnable(FALSE, TRUE, TRUE);
+}
+
+void hal_system_perf_proc_load_start(void) {
+	Vps_printf(" start CPU load perf !!!\n");
+	Chains_prfLoadCalcEnable(TRUE, FALSE, FALSE);
+}
+
+void hal_system_perf_proc_load_stop_and_print(void) {
+	Vps_printf(" stop CPU load perf and print loading !!!\n");
+	Chains_prfLoadCalcEnable(FALSE, TRUE, TRUE);
+}

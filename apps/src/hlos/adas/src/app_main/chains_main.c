@@ -113,6 +113,7 @@ char gChains_testMenu[] = {
     "\r\n o: hal sparse optical flow"
     "\r\n t: hal modl"
     "\r\n "
+    "\r\n 6: Show Memory/CPU/DDR BW usage"
     "\r\n p: CPU Status"
     "\r\n i: Show IP Addr (IPU + NDK + AVB) "
     "\r\n "
@@ -124,6 +125,113 @@ char gChains_testMenu[] = {
     "\r\n Enter Choice: "
     "\r\n "
 };
+
+Int32 Chains_memPrintHeapStatus()
+{
+    UInt32 procId, linkId;
+    SystemCommon_PrintStatus printStatus;
+
+    memset(&printStatus, 0, sizeof(printStatus));
+
+    printStatus.printHeapStatus = TRUE;
+
+    for(procId=0; procId<SYSTEM_PROC_MAX; procId++)
+    {
+        if(System_isProcEnabled(procId)==FALSE)
+            continue;
+
+        linkId = SYSTEM_MAKE_LINK_ID(procId, SYSTEM_LINK_ID_PROCK_LINK_ID);
+
+        System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_PRINT_STATUS,
+                &printStatus,
+                sizeof(printStatus),
+                TRUE
+            );
+    }
+    return SYSTEM_LINK_STATUS_SOK;
+}
+
+Int32 Chains_statCollectorPrint()
+{
+    UInt32 linkId;
+
+    linkId = IPU1_0_LINK(SYSTEM_LINK_ID_PROCK_LINK_ID);
+
+        System_linkControl(
+            linkId,
+            SYSTEM_COMMON_CMD_PRINT_STAT_COLL,
+            NULL,
+            0,
+            TRUE
+        );
+        Task_sleep(100);
+
+
+    return SYSTEM_LINK_STATUS_SOK;
+}
+
+Int32 Chains_prfLoadCalcEnable(Bool enable, Bool printStatus, Bool printTskLoad)
+{
+    UInt32 procId, linkId;
+
+
+    for(procId=0; procId<SYSTEM_PROC_MAX; procId++)
+    {
+        if(System_isProcEnabled(procId)==FALSE)
+            continue;
+
+        linkId = SYSTEM_MAKE_LINK_ID(procId, SYSTEM_LINK_ID_PROCK_LINK_ID);
+
+        if(enable)
+        {
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_START,
+                NULL,
+                0,
+                TRUE
+            );
+        }
+        else
+        {
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_STOP,
+                NULL,
+                0,
+                TRUE
+            );
+            if(printStatus)
+            {
+                SystemCommon_PrintStatus printStatus;
+
+                memset(&printStatus, 0, sizeof(printStatus));
+
+                printStatus.printCpuLoad = TRUE;
+                printStatus.printTskLoad = printTskLoad;
+                System_linkControl(
+                    linkId,
+                    SYSTEM_COMMON_CMD_PRINT_STATUS,
+                    &printStatus,
+                    sizeof(printStatus),
+                    TRUE
+                );
+                Task_sleep(100);
+            }
+            System_linkControl(
+                linkId,
+                SYSTEM_COMMON_CMD_CPU_LOAD_CALC_RESET,
+                NULL,
+                0,
+                TRUE
+            );
+        }
+    }
+
+    return SYSTEM_LINK_STATUS_SOK;
+}
 
 /**
  *******************************************************************************
@@ -196,6 +304,15 @@ Int32 main (Int32 argc, Char ** argv)
                 Chains_menuIssRun();
                 break;
             #endif
+            case '6':
+                //Utils_prcmPrintAllVDTempValues();
+                Chains_memPrintHeapStatus();
+                Chains_statCollectorPrint();
+                Chains_prfLoadCalcEnable(TRUE, FALSE, FALSE);
+                Vps_printf(" CHAINS: Waiting for CPU load calculation to Complete !!!!\n");
+                Task_sleep(2000);
+                Vps_printf(" CHAINS: CPU load calculation to Complete !!!!\n");
+                Chains_prfLoadCalcEnable(FALSE, TRUE, TRUE);
             case 'a':
             case 'A':
                 //hal_warp_affine_run();

@@ -1,0 +1,114 @@
+/******************************************************************************
+
+Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
+
+******************************************************************************/
+
+
+/*******************************************************************************
+ *
+ * 文件: main.c
+ *
+ * 描述: 该文件提供HAL 模块测试各个模块功能的接口函数
+ *
+ ******************************************************************************/
+
+#include "main.h"
+
+bool Wait_exit;
+
+static void SigHandler(int signum)
+{
+	signal(SIGKILL, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGTERM, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGSTOP, SIG_IGN);
+	signal(SIGHUP, SIG_IGN);
+
+	Wait_exit = false;
+
+	signal(SIGKILL, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGTERM, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGSTOP, SIG_DFL);
+	signal(SIGHUP, SIG_DFL);
+}
+
+static void SigSetup(void)
+{
+	struct sigaction action;
+
+	memset(&action, 0, sizeof(action));
+	action.sa_handler = SigHandler;
+
+	sigaction(SIGKILL, &action, NULL);
+	sigaction(SIGINT, &action, NULL);
+	sigaction(SIGTERM, &action, NULL);
+	sigaction(SIGQUIT, &action, NULL);
+	sigaction(SIGSTOP, &action, NULL);
+	sigaction(SIGHUP, &action, NULL);
+}
+
+/*******************************************************************************
+ *  函数名：system_run
+ *  描述：测试hal system总入口
+ *  输入：无
+ *  输出：无
+ *  返回：无
+ *  备注：
+ *******************************************************************************/
+void system_run(void)
+{
+	hal_system_perf_t perf;
+
+	printf("\r\n### system_run ### HAL_SYS_PROC_DSP !!!\r\n");
+	hal_system_get_perf(HAL_SYS_PROC_DSP_1, &perf);
+	usleep(500000);
+	hal_system_get_perf(HAL_SYS_PROC_DSP_2, &perf);
+	usleep(500000);
+	printf("\r\n### system_run ### HAL_SYS_PROC_EVE !!!\r\n");
+	hal_system_get_perf(HAL_SYS_PROC_EVE_1, &perf);
+	usleep(500000); 
+	hal_system_get_perf(HAL_SYS_PROC_EVE_2, &perf);
+	usleep(500000); 
+	hal_system_get_perf(HAL_SYS_PROC_EVE_3, &perf);
+	usleep(500000); 
+	hal_system_get_perf(HAL_SYS_PROC_EVE_4, &perf);
+	usleep(500000);
+	printf("\r\n### system_run ### HAL_SYS_PROC_A15 !!!\r\n");
+	printf("\r\n#HAL_SYS_PROC_CPU_0: %d \r\n", HAL_SYS_PROC_CPU_0);
+	hal_system_get_perf(HAL_SYS_PROC_CPU_0, &perf);
+}
+
+
+int main(int argc, char **argv)
+{
+	hal_arch_init();
+
+/*******************************************************************************
+ * use case 1:
+ * 先用hal_system_perf_proc_load_start()，启动perf，
+ * 等待至少0.5s，
+ * 最后用hal_system_perf_proc_load_stop_and_print()，结束perf并打印CPU LOAD。
+ *******************************************************************************/
+	printf("\r\n### use case 1: ### perf CPU load !!!\r\n");
+	hal_system_perf_proc_load_start();
+	usleep(500000);
+	hal_system_perf_proc_load_stop_and_print();
+	
+	usleep(10000);
+
+/*******************************************************************************
+ * use case 2:
+ * hal_system_print_proc_load_over_period()
+ * 函数输入为等待时间，单位us
+ *******************************************************************************/
+	printf("\r\n### use case 2: ### perf CPU load !!!\r\n");
+	hal_system_print_proc_load_over_period(500000);
+
+	hal_arch_deinit();
+
+	return 0;
+}

@@ -160,6 +160,39 @@ void hal_system_print_perf_all(hal_system_perf_all_t *perfall);
  *******************************************************************************/
 void hal_system_print_statistics_collector(void);
 
+void Chains_prfLoadCalcEnable(unsigned short enable, unsigned short printStatus, unsigned short printTskLoad);
+
+/*******************************************************************************
+ *  hal_system_print_proc_load_over_period
+ *  描述：获取一段时间内的系统所有处理器的使用率
+ *  输入：
+ * 		waittime：等待时间，单位us。如果waittime < 0.5s, 会被强制修改为0.5s。
+ *  输出：无
+ *  返回：无
+ *  备注：无
+ *******************************************************************************/
+void hal_system_print_proc_load_over_period(int waittime);
+
+/*******************************************************************************
+ *  hal_system_perf_proc_load_start
+ *  描述：开始计算系统所有处理器的使用率
+ *  输入：无
+ *  输出：无
+ *  返回：无
+ *  备注：无
+ *******************************************************************************/
+void hal_system_perf_proc_load_start(void);
+
+/*******************************************************************************
+ *  hal_system_perf_proc_load_stop_and_print
+ *  描述：结束并打印计算系统所有处理器的使用率
+ *  输入：无
+ *  输出：无
+ *  返回：无
+ *  备注：在执行hal_system_perf_proc_load_start 0.5s之后再执行，才能打印出所有处理器的使用率
+ *******************************************************************************/
+void hal_system_perf_proc_load_stop_and_print(void);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus
