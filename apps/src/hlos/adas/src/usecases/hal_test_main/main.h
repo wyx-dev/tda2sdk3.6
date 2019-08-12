@@ -29,6 +29,7 @@ Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
 #include <src/hlos/adas/src/usecases/hal_sonar/hal_sonar.h>
 #include <src/hlos/adas/src/usecases/hal_can/hal_can.h>
 #include <src/hlos/adas/src/usecases/hal_system/hal_system.h>
+#include <src/hlos/adas/src/usecases/hal_version/hal_version.h>
 
 void camera_run(void);
 void sonar_run(void);

@@ -491,6 +491,8 @@ void cam_offline_run(void)
 
 int main (int argc, char ** argv)
 {
+	hal_get_version();
+
 	hal_arch_init();
 #if 1
 	camera_run();
