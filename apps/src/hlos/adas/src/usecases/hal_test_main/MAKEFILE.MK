@@ -24,15 +24,16 @@ hal_test_main_exe:
 	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_camera/hal_camera.h $(RELEASE_BASE_DIR)
 	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_camera/camera.conf $(RELEASE_BASE_DIR)
 	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_can/hal_can.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_sonar/hal_sonar.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_sonar/hal_sonar.h $(RELEASE_BASE_DIR)
 	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_arch/hal_arch.h $(RELEASE_BASE_DIR)
 	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_imu/hal_imu.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_system/hal_system.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_warp_affine/hal_warp_affine.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_match_template/hal_match_template.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_match_template_classic/hal_match_template_classic.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_sparse_optical_flow/hal_sparse_optical_flow.h $(RELEASE_BASE_DIR)
-	#cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_modl/hal_modl.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_version/hal_version.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_system/hal_system.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_warp_affine/hal_warp_affine.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_match_template/hal_match_template.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_match_template_classic/hal_match_template_classic.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_sparse_optical_flow/hal_sparse_optical_flow.h $(RELEASE_BASE_DIR)
+	cp $(vision_sdk_PATH)/apps/src/hlos/adas/src/usecases/hal_modl/hal_modl.h $(RELEASE_BASE_DIR)
 	@echo \# Final gen exe hal_main.out !!!
 	@echo \#
 
