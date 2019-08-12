@@ -104,8 +104,11 @@ apps_hlos:
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_imu MODNAME=hal_imu CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_system MODNAME=hal_system CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_system MODNAME=hal_system CORE=a15_0 lib
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_version MODNAME=hal_version CORE=a15_0 depend
+	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_version MODNAME=hal_version CORE=a15_0 lib
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 depend
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main MODNAME=hal_test CORE=a15_0 lib
+
 ifeq ($(HAL), hal)
 	@echo "----------------------------------------------start hal so compile add by hubing----------------------------"
 	-cp $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/obj/apps/tda2xx-evm/a15_0/release/*.o -far $(vision_sdk_PATH)/binaries/apps/tda2xx_evm_linux_all/hal/obj/
@@ -117,6 +120,7 @@ ifeq ($(HAL), hal)
 	$(MAKE) -fMAKEFILE.MK -C$($(MAKEAPPNAME)_PATH)/src/hlos/adas/src/usecases/hal_test_main CORE=a15_0 hal_test_main_exe
 	@echo "----------------------------------------------end hal so compile--------------------------------------------"
 endif
+
 ifeq ($(A15_TARGET_OS), Linux)
 ifneq ($(ROBUST_RVC_INCLUDE), yes)
 	$(MAKE) links_fw_libs_hlos

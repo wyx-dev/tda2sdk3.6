@@ -73,12 +73,12 @@ $(LIB_DIR)/$(LIB) : $(OBJS) $(OBJSCPP)
 	@echo \# $(MODNAME): $(PLATFORM): Creating archive $(LIB)
 	$(AR)	$(AR_OPTS) $(LIB_DIR)/$(LIB) $(OBJ_DIR)/*.o
 ifeq ($(NEW_LIB),$(APP_LIB))
-ifneq ($(MODNAME),$(filter $(MODNAME),app_main hal_arch hal_test hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_sonar hal_warp_affine hal_match_template hal_sparse_optical_flow hal_modl hal_imu hal_system hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_match_template_classic))
+ifneq ($(MODNAME),$(filter $(MODNAME),app_main hal_arch hal_version hal_test hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_sonar hal_warp_affine hal_match_template hal_sparse_optical_flow hal_modl hal_imu hal_system hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_match_template_classic))
 	@echo $(NEW_LIB) >> $(DEST_ROOT)/appLiblist_$(CORE).txt
 endif
 endif
 ifeq ($(NEW_HAL_LIB),$(APP_HAL_LIB))
-ifeq ($(MODNAME),$(filter $(MODNAME), hal_arch hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_sonar hal_warp_affine hal_match_template hal_sparse_optical_flow hal_modl hal_imu hal_system hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_match_template_classic))
+ifeq ($(MODNAME),$(filter $(MODNAME), hal_arch hal_version hal_camera hal_multi_camera_display hal_multi_camera_save_local hal_single_camera_display hal_single_camera_save_local hal_can hal_sonar hal_warp_affine hal_match_template hal_sparse_optical_flow hal_modl hal_imu hal_system hal_single_cam_vpe_resize_save hal_single_cam_vpe_sad hal_offline_cam_vpe_sad hal_offline_feed_cam_vpe_sad hal_match_template_classic))
 	@echo $(NEW_HAL_LIB) >> $(DEST_ROOT)/appHalLiblist_$(CORE).txt
 endif
 endif
