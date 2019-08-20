@@ -334,6 +334,7 @@ showconfig:
 #                                     #
 #######################################
 depend:
+	$(shell ./gen_version.py)
 	$(MAKE) -s makeconfig
 	$(MAKE) edma3lld
 	$(MAKE) pdk
