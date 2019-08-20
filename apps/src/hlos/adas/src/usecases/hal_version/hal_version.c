@@ -9,7 +9,7 @@ Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
  *  INCLUDE FILES
  *******************************************************************************/
 #include "hal_version.h"
-
+#include <stdio.h>
 
 /*******************************************************************************
  *  函数名：hal_get_version
