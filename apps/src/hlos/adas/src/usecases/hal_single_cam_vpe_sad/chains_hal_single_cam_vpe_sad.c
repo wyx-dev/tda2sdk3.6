@@ -164,6 +164,15 @@ Void chains_hal_single_cam_vpe_sad_SetAppPrms(chains_hal_single_cam_vpe_sadObj *
 	    chains_hal_single_cam_vpe_sad_set_output_frame_prms(&pUcObj->CapturePrm);
     }
 
+    if (g_camera_save_local_obj.encode_flag == 1)
+    {
+        pUcObj->CapturePrm.encode_flag = 1;
+    }
+    else
+    {
+        pUcObj->CapturePrm.encode_flag = 0;
+    }
+
 // #if 1
 //     ChainsCommon_SingleCam_SetCapturePrms(&(pUcObj->CapturePrm),
 //             CAPTURE_SENSOR_WIDTH,

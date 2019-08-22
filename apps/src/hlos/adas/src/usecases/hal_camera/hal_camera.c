@@ -29,6 +29,7 @@ _camera_save_local_obj g_camera_save_local_obj =
 {
 	.resize_chnl_num = 0,
 	.hdmi_camera_flag = 0,
+	.encode_flag = 0,
 };
 
 hal_run_mode_e run_mode;
@@ -111,6 +112,22 @@ static int _config_file_parser(const char *file_name)
 
 		Vps_printf("capture-name:     [%s]\n", s ? s : "UNDEF");
 	}
+
+	s = iniparser_getstring(ini, "sensor-params-set:iscode", NULL);
+	if (s == NULL)
+	{
+		Vps_printf("\r\n### _config_file_parser ### iscode error !!!\r\n");
+		return HAL_CAMERA_UNKNOWN;
+	}
+	else if (0 == strcmp("true", s))
+	{
+		g_camera_save_local_obj.encode_flag = 1;
+	}
+	else if(0 == strcmp("false", s))
+	{
+		g_camera_save_local_obj.encode_flag = 0;
+	}
+	Vps_printf("isencode:     [%s]\n", s ? s : "UNDEF");
 
 	s = iniparser_getstring(ini, "sensor-params-set:resolution", NULL);
 	Vps_printf("resolution:     [%s]\n", s ? s : "UNDEF");
