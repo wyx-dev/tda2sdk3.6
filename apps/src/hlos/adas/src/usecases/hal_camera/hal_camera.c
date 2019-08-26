@@ -30,6 +30,7 @@ _camera_save_local_obj g_camera_save_local_obj =
 	.resize_chnl_num = 0,
 	.hdmi_camera_flag = 0,
 	.encode_flag = 0,
+	.sync_flag = 0,
 };
 
 hal_run_mode_e run_mode;
@@ -150,6 +151,32 @@ static int _config_file_parser(const char *file_name)
 		g_camera_save_local_obj.encode_flag = 0;
 	}
 	Vps_printf("isencode:     [%s]\n", s ? s : "UNDEF");
+
+	/* wyx ***** */
+	s = iniparser_getstring(ini, "sensor-params-set:sync_flag", NULL);
+	if (s == NULL)
+	{
+		Vps_printf("\r\n### _config_file_parser ### sync_flag error !!!\r\n");
+		return HAL_CAMERA_UNKNOWN;
+	}
+	else
+	{
+		if (0 == strcmp("lastest", s))
+		{
+			g_camera_save_local_obj.sync_flag = LASTEST;
+		}
+		else if (0 == strcmp("continue", s))
+		{
+			g_camera_save_local_obj.sync_flag = CONTINUE;
+		}
+		else
+		{
+			Vps_printf("\r\n### _config_file_parser ### sync_flag error !!!\r\n");
+		}
+
+		Vps_printf("sync_flag:     [%s]\n", s ? s : "UNDEF");
+	}
+	/* ********* */
 
 	s = iniparser_getstring(ini, "sensor-params-set:resolution", NULL);
 	Vps_printf("resolution:     [%s]\n", s ? s : "UNDEF");
@@ -330,6 +357,10 @@ int hal_camera_get_frame(hal_frame_data_t *frmdata, unsigned int timeout)
 		g_frm_data[frmdata->channel].output_count = g_frm_data[frmdata->channel].input_count - HAL_BUF_MAX_QUE_SIZE;
 		Vps_printf("\r\n### hal_camera_get_frame ### drop frame %d \r\n", g_frm_data[frmdata->channel].output_count - pre_output_count);
 	}//overflow
+
+	/* Select interface mode */
+	if (g_camera_save_local_obj.sync_flag == LASTEST)
+		g_frm_data[frmdata->channel].output_count = g_frm_data[frmdata->channel].input_count - 1;
 
 	/* consumption */
 	frmdata->timestamp.tv_sec = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_sec;

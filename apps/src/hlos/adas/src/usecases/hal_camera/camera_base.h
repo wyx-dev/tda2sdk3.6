@@ -40,6 +40,9 @@ Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
  *******************************************************************************/
 #define HAL_BUF_MAX_QUE_SIZE       (6)
 #define HAL_GET_FRAME_TIMEOUT      (0x00)
+#define LASTEST                    (1)
+#define CONTINUE                   (0)
+
 
 /*******************************************************************************
  *  结构体：_hal_frame_t
@@ -95,6 +98,7 @@ typedef struct {
 	unsigned long long offlineDataIndex;
 	UInt8 hdmi_camera_flag;
 	UInt8 encode_flag;
+	UInt8 sync_flag;
 } _camera_save_local_obj;
 
 
