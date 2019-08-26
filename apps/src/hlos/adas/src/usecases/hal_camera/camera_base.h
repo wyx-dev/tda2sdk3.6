@@ -41,7 +41,6 @@ Copyright (c) [2018 - 2019] MOMENTA Incorporated. All rights reserved.
 #define HAL_BUF_MAX_QUE_SIZE       (6)
 #define HAL_GET_FRAME_TIMEOUT      (0x00)
 
-
 /*******************************************************************************
  *  结构体：_hal_frame_t
  *  描述：定义HAL CAM 帧数据传输时用的结构体变量类型

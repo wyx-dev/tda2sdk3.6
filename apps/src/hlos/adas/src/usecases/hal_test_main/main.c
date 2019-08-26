@@ -92,19 +92,19 @@ static void* _cam_save_local_thread_func(void* ptr)
 	unsigned long long old_user_time[4] = {0};
 	int imgLength = width*height*YUV_LEN;
 	frmdata.channel = *(unsigned int*)ptr;
-
+	long long int now = 0,pre = 0;
 	/*malloc mem for 1v1r vpe resize*/
-	if(1 == channel_num)
-	{
-		for(i = 0; i < VPE_RESIZE_NUM; i++)
-		{
-			frmdata.resize_buf[i] = (unsigned char *)malloc(resize_config[i].output_width*resize_config[i].output_height*img_sufix_len[i]);
-		}
-	}/*malloc mem for apa 4 camera*/
-	else if(4 == channel_num)
-	{
-        frmdata.buffer = (unsigned char *)malloc(imgLength);
-	}
+	// if(1 == channel_num)
+	// {
+	// 	for(i = 0; i < VPE_RESIZE_NUM; i++)
+	// 	{
+	// 		frmdata.resize_buf[i] = (unsigned char *)malloc(resize_config[i].output_width*resize_config[i].output_height*img_sufix_len[i]);
+	// 	}
+	// }/*malloc mem for apa 4 camera*/
+	// else if(4 == channel_num)
+	// {
+    //     frmdata.buffer = (unsigned char *)malloc(imgLength);
+	// }
 
 	/*loop to get data*/
 	while(Wait_exit)
@@ -112,7 +112,10 @@ static void* _cam_save_local_thread_func(void* ptr)
 		ret = hal_camera_get_frame(&frmdata,1000);
 		if((0 == ret) && ((count_frame%1) == 0))
 		{
-			#if 1
+			now  = (long long int)(frmdata.timestamp.tv_sec*1e6 + frmdata.timestamp.tv_usec);
+			printf("%lld cha:%lld count_frame:%d\n",(long long int)(frmdata.timestamp.tv_sec*1e6 + frmdata.timestamp.tv_usec),now-pre,count_frame);
+			pre = now;
+			#if 0
 			//if(count_frame == 100){
 			char file_name[500] = {0};
 			long long timeout = 0;
@@ -162,17 +165,17 @@ static void* _cam_save_local_thread_func(void* ptr)
 	}
 
 	/*free mem*/
-	if(1 == channel_num)
-	{
-		for(i = 0; i < VPE_RESIZE_NUM; i++)
-		{
-			free(frmdata.resize_buf[i]);
-		}
-	}
-	else if(4 == channel_num)
-	{
-		free(frmdata.buffer);
-	}
+	// if(1 == channel_num)
+	// {
+	// 	for(i = 0; i < VPE_RESIZE_NUM; i++)
+	// 	{
+	// 		free(frmdata.resize_buf[i]);
+	// 	}
+	// }
+	// else if(4 == channel_num)
+	// {
+	// 	free(frmdata.buffer);
+	// }
 
 	pthread_exit(0);
 }

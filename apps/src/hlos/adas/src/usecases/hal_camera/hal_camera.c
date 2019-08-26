@@ -51,12 +51,34 @@ extern pthread_mutex_t feed_mutex;
 
 static void _cam_save_local_get_frame_from_null(hal_frame_data_t *frmdata)
 {
-	pthread_mutex_lock(&g_camera_save_local_obj.mutex[frmdata->channel]);
-	memcpy(&g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].input_count++ % HAL_BUF_MAX_QUE_SIZE], frmdata, sizeof(hal_frame_data_t));
-	pthread_cond_signal(&g_camera_save_local_obj.cond[frmdata->channel]);
-	pthread_mutex_unlock(&g_camera_save_local_obj.mutex[frmdata->channel]);
-}
+    pthread_mutex_lock(&g_camera_save_local_obj.mutex[frmdata->channel]);
 
+	/* 生产 */
+	g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].input_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_sec = frmdata->timestamp.tv_sec;
+	g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].input_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_usec = frmdata->timestamp.tv_usec;
+	g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].input_count % HAL_BUF_MAX_QUE_SIZE].hw_timestamp = frmdata->hw_timestamp;
+
+	if (g_camera_save_local_obj.resize_chnl_num == 0)
+	{
+		g_frm_data[frmdata->channel].frame_data[(g_frm_data[frmdata->channel].input_count) % HAL_BUF_MAX_QUE_SIZE].len = frmdata->len;
+		g_frm_data[frmdata->channel].frame_data[(g_frm_data[frmdata->channel].input_count) % HAL_BUF_MAX_QUE_SIZE].buffer = frmdata->buffer;
+	}
+
+	if (g_camera_save_local_obj.resize_chnl_num > 0)
+	{
+		for (int i = 0; i < g_camera_save_local_obj.resize_chnl_num; i++)
+		{
+			g_frm_data[frmdata->channel].frame_data[(g_frm_data[frmdata->channel].input_count) % HAL_BUF_MAX_QUE_SIZE].resize_buf_len[i] = frmdata->resize_buf_len[i];
+			g_frm_data[frmdata->channel].frame_data[(g_frm_data[frmdata->channel].input_count) % HAL_BUF_MAX_QUE_SIZE].resize_buf[i] = frmdata->resize_buf[i];
+		}
+	}
+
+	g_frm_data[frmdata->channel].input_count++;
+
+	pthread_cond_signal(&g_camera_save_local_obj.cond[frmdata->channel]);
+    pthread_mutex_unlock(&g_camera_save_local_obj.mutex[frmdata->channel]);
+
+}
 
 static void _cam_save_local_set_frame_cb(HAL_FRMDATA_CB fun)
 {
@@ -278,59 +300,95 @@ int hal_camera_get_frame(hal_frame_data_t *frmdata, unsigned int timeout)
 
 	pthread_mutex_lock(&g_camera_save_local_obj.mutex[frmdata->channel]);
 
-	/*
-	*  如果timeout等于 0表示阻塞方式
-	*/
-	if (HAL_GET_FRAME_TIMEOUT == timeout)
+	/* Determine if the buffer is empty */
+	if (g_frm_data[frmdata->channel].output_count == g_frm_data[frmdata->channel].input_count)
 	{
-		pthread_cond_wait(&g_camera_save_local_obj.cond[frmdata->channel], &g_camera_save_local_obj.mutex[frmdata->channel]);
-	}
-	else
-	{
-		pthread_cond_timedwait(&g_camera_save_local_obj.cond[frmdata->channel], &g_camera_save_local_obj.mutex[frmdata->channel], &abstime);
-	}
-
-	if (g_frm_data[frmdata->channel].output_count != g_frm_data[frmdata->channel].input_count)
-	{
-		if (g_frm_data[frmdata->channel].input_count - g_frm_data[frmdata->channel].output_count >= HAL_BUF_MAX_QUE_SIZE)
+		/*
+		*  如果timeout等于 0表示阻塞方式
+		*/
+		if (HAL_GET_FRAME_TIMEOUT == timeout)
 		{
-			Vps_printf("\r\n### hal_camera_get_frame ### OVER FLOW %d \r\n", g_frm_data[frmdata->channel].input_count - g_frm_data[frmdata->channel].output_count);
-			g_frm_data[frmdata->channel].output_count = g_frm_data[frmdata->channel].input_count - HAL_BUF_MAX_QUE_SIZE + 2;
+			pthread_cond_wait(&g_camera_save_local_obj.cond[frmdata->channel], &g_camera_save_local_obj.mutex[frmdata->channel]);
+		}
+		else
+		{
+			pthread_cond_timedwait(&g_camera_save_local_obj.cond[frmdata->channel], &g_camera_save_local_obj.mutex[frmdata->channel], &abstime);
 		}
 
-		frmdata->timestamp.tv_sec = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_sec;
-		frmdata->timestamp.tv_usec = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_usec;
-		frmdata->hw_timestamp = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].hw_timestamp;
-
-		if (g_camera_save_local_obj.resize_chnl_num == 0)
+		if (g_frm_data[frmdata->channel].output_count == g_frm_data[frmdata->channel].input_count)
 		{
-			frmdata->len = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].len;
-			memcpy(frmdata->buffer,
-			       g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].buffer,
-			       frmdata->len);
+			Vps_printf("\r\n### hal_camera_get_frame ### wait channel[%d] timeout !!!\r\n", frmdata->channel);
+			pthread_mutex_unlock(&g_camera_save_local_obj.mutex[frmdata->channel]);
+			return HAL_CAMERA_EFAIL;
 		}
+	}//Buffer is empty
 
-		if (g_camera_save_local_obj.resize_chnl_num > 0)
-		{
-			for (i = 0; i < g_camera_save_local_obj.resize_chnl_num; i++)
-			{
-				frmdata->resize_buf_len[i] = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].resize_buf_len[i];
-				memcpy(frmdata->resize_buf[i],
-				       g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].resize_buf[i],
-				       frmdata->resize_buf_len[i]);
-			}
-		}
-
-		g_frm_data[frmdata->channel].output_count++;
-	}
-	else
+	if (g_frm_data[frmdata->channel].input_count - g_frm_data[frmdata->channel].output_count >= HAL_BUF_MAX_QUE_SIZE)
 	{
-		Vps_printf("\r\n### hal_camera_get_frame ### wait channel[%d] timeout !!!\r\n", frmdata->channel);
-		pthread_mutex_unlock(&g_camera_save_local_obj.mutex[frmdata->channel]);
-		return HAL_CAMERA_EFAIL;
+		int pre_output_count = g_frm_data[frmdata->channel].output_count;
+		Vps_printf("\r\n### hal_camera_get_frame ### OVER FLOW %d \r\n", g_frm_data[frmdata->channel].input_count - g_frm_data[frmdata->channel].output_count);
+		g_frm_data[frmdata->channel].output_count = g_frm_data[frmdata->channel].input_count - HAL_BUF_MAX_QUE_SIZE;
+		Vps_printf("\r\n### hal_camera_get_frame ### drop frame %d \r\n", g_frm_data[frmdata->channel].output_count - pre_output_count);
+	}//overflow
+
+	/* consumption */
+	frmdata->timestamp.tv_sec = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_sec;
+	frmdata->timestamp.tv_usec = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].timestamp.tv_usec;
+	frmdata->hw_timestamp = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].hw_timestamp;
+
+	if (g_camera_save_local_obj.resize_chnl_num == 0)
+	{
+		frmdata->len = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].len;
+		frmdata->buffer = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].buffer;
 	}
+
+	if (g_camera_save_local_obj.resize_chnl_num > 0)
+	{
+		for (i = 0; i < g_camera_save_local_obj.resize_chnl_num; i++)
+		{
+			frmdata->resize_buf_len[i] = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].resize_buf_len[i];
+			frmdata->resize_buf[i] = g_frm_data[frmdata->channel].frame_data[g_frm_data[frmdata->channel].output_count % HAL_BUF_MAX_QUE_SIZE].resize_buf[i];
+		}
+	}
+
+	g_frm_data[frmdata->channel].output_count++;
 
 	pthread_mutex_unlock(&g_camera_save_local_obj.mutex[frmdata->channel]);
+
+#ifdef __DEBUG
+	char str[80];
+	FILE* fd = fopen("a15usec.log","ab+");
+	sprintf(str,"a15sec=%lld----input_count=%d--output_count=%d\r\n",(long long int)(frmdata->timestamp.tv_sec * 1e6 + frmdata->timestamp.tv_usec), g_frm_data[frmdata->channel].input_count, g_frm_data[frmdata->channel].output_count);
+
+	//snprintf(str,80,"a15sec=%lld-------------------------------------------\r\n",(long long int)(frmdata->timestamp.tv_sec * 1e6 + frmdata->timestamp.tv_usec));
+	fwrite(str, 1, strlen(str), fd);
+	fflush(fd);
+	fclose(fd);
+	memset(str,0,sizeof(str));
+#endif
+
+	//printf("Consumption start!!!input_count=%d----output_count=%d----a15sec=%lld \r\n",g_frm_data[frmdata->channel].input_count, g_frm_data[frmdata->channel].output_count,(long long int)(frmdata->timestamp.tv_sec * 1e6 + frmdata->timestamp.tv_usec));
+
+#if 0
+	/* wyx/debug */
+	if (g_frm_data[frmdata->channel].output_count % 500 == 0 && g_frm_data[frmdata->channel].output_count > 100)
+	{
+		usleep(200000);
+		printf("sleep over flow ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff!!!!!\n");
+	}
+
+	if (g_frm_data[frmdata->channel].output_count % 700 == 0 && g_frm_data[frmdata->channel].output_count > 100)
+	{
+		g_camera_save_local_obj.sync_flag = LASTEST;
+	}
+
+	if (g_frm_data[frmdata->channel].output_count % 999 == 0 && g_frm_data[frmdata->channel].output_count > 100)
+	{
+		usleep(200000);
+		printf("sleep over flow ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff!!!!!\n");
+	}
+	/* ********* */
+#endif
 
 	return HAL_CAMERA_OK;
 }
