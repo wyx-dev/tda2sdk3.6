@@ -107,13 +107,11 @@ static void* _cam_save_local_thread_func(void* ptr)
 
 			if ((sub < 30000) || (sub > 50000) || count_frame == 300)
 			{
-				if ((is_first == true) || (count_frame == 101) || (count_frame == 201))
+				if (is_first == true)
 				{
 					is_first = false;
 					continue;
 				}
-				if (count_frame == 300)
-					pthread_exit((void*)(-1));
 				perror("Test failed!!!\n");
 				pthread_exit((void*)(-1));
 			}
